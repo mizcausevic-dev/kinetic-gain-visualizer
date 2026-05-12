@@ -1,70 +1,40 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project are documented here.
-
-This log is intentionally written as an engineering record rather than a launch theater timeline. Dates reflect when the concept, design, prototype, and public packaging phases were mature enough to document.
 
 ## [1.0.0] - 2026-05-12
 
 ### Released
-- Published **kinetic-gain-visualizer** as a public, portfolio-grade answer-engine visibility system.
-- Packaged the current implementation, documentation, validation workflow, and proof surfaces into a repo that could be reviewed by engineering, product, and operating stakeholders.
-- Tightened the repo story around the real-world operating problem: answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
+- Published **kinetic-gain-visualizer** as the unified human-facing renderer for the protocol suite.
+- Added automatic spec detection and a clearer read-side experience across multiple document types.
+- Positioned the repo as the suite's human entry point rather than as a narrow parser demo.
 
 ### Why this mattered
-- Existing approaches in SEO crawlers, analytics dashboards, and structured-data validators were useful for adjacent workflows.
-- They still missed the core need: a way to connect web hygiene with citation readiness, semantic packaging, and answer-engine discoverability.
-- This release made the repo readable as an operational capability rather than a narrow technical demo.
+- Specifications become much more adoptable when they can be inspected visually instead of only read as raw JSON.
+- A family of protocols needed a shared renderer to prove the ecosystem had both machine and human surfaces.
+- This release made the visualizer a real flagship for the suite.
 
-## [0.1.0] - 2026-02-18
+## [0.1.0] - 2026-02-04
 
 ### Shipped
-- Cut the first coherent internal version of the product shape behind **kinetic-gain-visualizer**.
-- Standardized the core objects, decision surfaces, and operator outputs around the repo's main working problem.
-- Established the first reviewable version of the architecture described as: Unified visualizer for the five Kinetic Gain Protocol Suite specs. Paste any JSON document; the visualizer auto-detects the spec from its *_version field and renders the appropriate view. React 19 + Vite + Tailwind.
+- Standardized the first multi-spec render paths and editor surfaces.
+- Added the initial about, tools, and architecture views that made the app more than a single-pane viewer.
 
-### Notes
-- This milestone was less about polish and more about proving the operating model.
-- The emphasis was on turning a messy domain problem into something a real team could reason about in CI, review, or day-to-day operations.
-
-## [Prototype] - 2025-07-20
+## [Prototype] - 2025-06-01
 
 ### Built
-- Created the first runnable prototype for the repo's core workflow and decision model.
-- Started validating the design against real operating pressures instead of idealized sample flows.
-- Added enough shape to test whether the project could surface action, not just information.
+- Built the first interactive renderer for spec payloads and example declarations.
+- Tested whether auto-detection could make the suite easier to learn and demo.
 
-### Problem pressure
-- The prototype phase was shaped by concrete issues such as answer-engine discoverability gaps, thin structured data, and inconsistent entity linking.
-- This was the point where the project moved from a sketch into something worth hardening.
-
-## [Design Phase] - 2024-09-17
+## [Design Phase] - 2024-02-17
 
 ### Designed
-- Defined the core philosophy for the system:
-  - operator-first
-  - decision-legible
-  - CI- and review-friendly
-  - suitable for mixed technical and business audiences
-- Chose outputs that would make the repo useful to real operators instead of just visually impressive.
-- Focused the design on explainability, evidence, and next-best action rather than passive reporting.
+- Chose a unified visualizer model instead of parallel single-spec demos.
+- Focused on readability, trust, and explainability over flashy motion.
+- Treated the visualizer as a product surface for protocol adoption.
 
-### Rejected approaches
-- Avoided turning the repo into a generic dashboard or CRUD exercise.
-- Avoided thin wrapper patterns that would hide the actual operating problem behind fashionable tooling choices.
-
-## [Idea Origin] - 2024-02-17
+## [Idea Origin] - 2023-05-18
 
 ### Observed
-- The initial idea surfaced while looking at how teams were handling answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
-- The recurring pattern was that people could often see fragments of the problem, but not the whole operational story in one place.
-
-### Insight
-- The missing product was not another point solution. It was a clearer operating layer that made the work legible to growth, search, and content operations teams.
-- That insight became the basis for **kinetic-gain-visualizer**.
-
-## [Background Signals] - 2022-08-09
-
-### Context
-- Earlier platform, governance, and operator-tooling work made one pattern obvious: the dangerous systems are rarely the ones with no controls at all. They are the ones where controls exist, but are fragmented, weakly owned, and hard to read under pressure.
-- That pattern shaped this project long before the public repo existed.
+- The idea emerged when it became clear that good specs still needed a better human read path.
+- The missing artifact was a renderer that made machine-readable declarations easier to inspect and discuss.
