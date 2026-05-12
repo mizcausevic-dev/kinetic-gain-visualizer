@@ -9,6 +9,7 @@ const accentRing: Record<string, string> = {
   amber: 'border-amber-300 hover:border-amber-500',
   rose: 'border-rose-300 hover:border-rose-500',
   teal: 'border-teal-300 hover:border-teal-500',
+  indigo: 'border-indigo-300 hover:border-indigo-500',
 };
 
 const accentDot: Record<string, string> = {
@@ -18,6 +19,7 @@ const accentDot: Record<string, string> = {
   amber: 'bg-amber-500',
   rose: 'bg-rose-500',
   teal: 'bg-teal-500',
+  indigo: 'bg-indigo-500',
 };
 
 const accentText: Record<string, string> = {
@@ -27,6 +29,7 @@ const accentText: Record<string, string> = {
   amber: 'text-amber-700',
   rose: 'text-rose-700',
   teal: 'text-teal-700',
+  indigo: 'text-indigo-700',
 };
 
 export function ArchitectureView() {
@@ -36,13 +39,14 @@ export function ArchitectureView() {
         <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold code">
           Infrastructure layer
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">One server, six specs.</h1>
+        <h1 className="text-3xl font-bold tracking-tight">One server, seven specs.</h1>
         <p className="text-slate-600 leading-relaxed">
-          The Kinetic Gain Protocol Suite multiplexes six independent JSON specifications into a single
+          The Kinetic Gain Protocol Suite multiplexes seven independent JSON specifications into a single
           runtime: <a className="text-blue-600 underline underline-offset-2 hover:text-blue-800 code" href={MCP_SERVER_REPO} target="_blank" rel="noreferrer">mcp-kinetic-gain</a>.
-          Five core specs cover entity, prompt, agent, evidence, and tool disclosure; an EdTech extension
-          adds AI tutor disclosure. Specs with a well-known URL convention get fetch tools; specs without
-          one get parse tools that accept an inline JSON document. Total surface: <strong>{TOTAL_TOOL_COUNT} tools</strong>.
+          Five core specs cover entity, prompt, agent, evidence, and tool disclosure; two EdTech extensions
+          add AI tutor disclosure (vendor-side) and Student AI Disclosure (student-side). Specs with a
+          well-known URL convention get fetch tools; specs without one get parse tools that accept an inline
+          JSON document. Total surface: <strong>{TOTAL_TOOL_COUNT} tools</strong>.
         </p>
       </header>
 
@@ -54,7 +58,7 @@ export function ArchitectureView() {
               <Server size={12} /> Core
             </div>
             <h2 className="text-2xl font-bold mb-1 tracking-tight">mcp-kinetic-gain</h2>
-            <p className="text-xs text-slate-400 code">v0.2.0 · stdio MCP server</p>
+            <p className="text-xs text-slate-400 code">v0.3.0 · stdio MCP server</p>
 
             <div className="my-8 flex items-center justify-center flex-1">
               <div className="relative w-44 h-44">

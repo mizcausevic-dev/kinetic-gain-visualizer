@@ -1,11 +1,12 @@
 /**
- * Canonical data for the six Kinetic Gain Protocol Suite specs and the
- * 24 tools exposed by mcp-kinetic-gain. Mirrored from
+ * Canonical data for the seven Kinetic Gain Protocol Suite specs and the
+ * 29 tools exposed by mcp-kinetic-gain. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
- * The six specs are five core (AEO Protocol, Prompt Provenance, Agent Cards,
- * AI Evidence Format, MCP Tool Cards) plus one EdTech extension (AI Tutor Cards).
+ * The seven specs are five core (AEO Protocol, Prompt Provenance, Agent
+ * Cards, AI Evidence Format, MCP Tool Cards) plus two EdTech extensions
+ * (AI Tutor Cards, Student AI Disclosure).
  */
 import type { SpecKey } from './detect';
 
@@ -22,7 +23,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -96,6 +97,18 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 6,
     specRepo: 'https://github.com/mizcausevic-dev/ai-tutor-card-spec',
     accent: 'teal',
+  },
+  {
+    key: 'student-ai-disclosure',
+    displayName: 'Student AI Disclosure',
+    fullName: 'Student AI Disclosure v0.1 (EdTech extension)',
+    shortBlurb:
+      'Student-side disclosure attached to submitted work. AI usage facts, role taxonomy, prompt evidence (full / hashed / omitted), artifact hash binding, policy posture, teacher acknowledgment.',
+    versionField: 'disclosure_version',
+    wellKnownPath: null,
+    toolCount: 5,
+    specRepo: 'https://github.com/mizcausevic-dev/student-ai-disclosure-spec',
+    accent: 'indigo',
   },
 ];
 
@@ -346,6 +359,52 @@ export const TOOLS: ToolSpec[] = [
     description: 'Enforce the spec\'s COPPA conditional rule: if audience.age_range_min < 13 then data_privacy.coppa_compliant MUST be true. Returns { ok: true } or { error: coppa_violation, reason }.',
     inputs: [
       { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tutor Card JSON.' },
+    ],
+  },
+
+  // Student AI Disclosure (EdTech extension) — 5 tools
+  {
+    name: 'disclosure_validate',
+    protocol: 'student-ai-disclosure',
+    description: 'Validate a Student AI Disclosure JSON document against the v0.1 schema. Enforces all conditional rules: ai_used true requires tools/roles/extent/prompt_mode; ai_used false forbids them; prompt mode gates prompts presence and text/hash exclusivity.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
+    ],
+  },
+  {
+    name: 'disclosure_inspect',
+    protocol: 'student-ai-disclosure',
+    description: 'Structured summary of a Student AI Disclosure: assignment identity, AI usage facts, tools used (with back-refs to Agent / Tutor Cards), roles, assistance extent, prompt-mode + count, artifact hash, policy posture, signature + teacher acknowledgment.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
+    ],
+  },
+  {
+    name: 'disclosure_verify_artifact_hash',
+    protocol: 'student-ai-disclosure',
+    description: 'Recompute SHA-256 over a candidate artifact and compare to disclosure.artifact_hash. Pass candidate_text (canonical SHA-256: LF endings, no trailing newline) for text artifacts, or candidate_bytes_base64 (raw-bytes SHA-256) for binary artifacts.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
+      { name: 'candidate_text', type: 'string', required: false, description: 'Text artifact (canonical mode).' },
+      { name: 'candidate_bytes_base64', type: 'string (base64)', required: false, description: 'Base64-encoded raw artifact bytes.' },
+    ],
+  },
+  {
+    name: 'disclosure_verify_prompt_hash',
+    protocol: 'student-ai-disclosure',
+    description: 'Verify a single prompt hash in a hashed-mode disclosure. Looks up prompt_id and compares canonical SHA-256 of candidate_text against the stored hash.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
+      { name: 'prompt_id', type: 'string', required: true, description: 'ID of the prompt to verify, e.g. "p1".' },
+      { name: 'candidate_text', type: 'string', required: true, description: 'Candidate prompt text.' },
+    ],
+  },
+  {
+    name: 'disclosure_aup_check',
+    protocol: 'student-ai-disclosure',
+    description: 'Surface the disclosure\'s policy posture: declared_compliant / declared_non_compliant / aup_referenced_but_unclaimed / no_aup_reference. v0.3 reports declared posture only; future versions will fetch and cross-check against the Classroom AI AUP spec.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
     ],
   },
 ];
