@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Github, FileJson, Eye, Info, Sparkles } from 'lucide-react';
+import { Github, FileJson, Eye, Info, Sparkles, Network, Cpu } from 'lucide-react';
 
 import { detectSpec, SPECS, specInfo, type SpecKey } from './detect';
 import { EXAMPLES, AEO_EXAMPLE } from './examples';
@@ -11,7 +11,10 @@ import { AiEvidenceRenderer } from './renderers/AiEvidenceRenderer';
 import { McpToolCardRenderer } from './renderers/McpToolCardRenderer';
 import { RawJsonRenderer } from './renderers/RawJsonRenderer';
 
-type View = 'visualize' | 'editor' | 'about';
+import { ArchitectureView } from './views/Architecture';
+import { ToolsView } from './views/Tools';
+
+type View = 'visualize' | 'editor' | 'architecture' | 'tools' | 'about';
 
 const accentBadge: Record<string, string> = {
   blue: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -21,10 +24,12 @@ const accentBadge: Record<string, string> = {
   rose: 'bg-rose-100 text-rose-800 border-rose-200',
 };
 
+const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'about'];
+
 function pickInitialView(): View {
   if (typeof window === 'undefined') return 'visualize';
   const p = new URLSearchParams(window.location.search).get('view');
-  if (p === 'editor' || p === 'about') return p;
+  if (p && (VALID_VIEWS as string[]).includes(p)) return p as View;
   return 'visualize';
 }
 
@@ -68,6 +73,8 @@ export default function App() {
           <div className="hidden md:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
             <NavBtn icon={Eye} label="Visualize" active={view === 'visualize'} onClick={() => setView('visualize')} />
             <NavBtn icon={FileJson} label="Editor" active={view === 'editor'} onClick={() => setView('editor')} />
+            <NavBtn icon={Network} label="Architecture" active={view === 'architecture'} onClick={() => setView('architecture')} />
+            <NavBtn icon={Cpu} label="Tools" active={view === 'tools'} onClick={() => setView('tools')} />
             <NavBtn icon={Info} label="About" active={view === 'about'} onClick={() => setView('about')} />
           </div>
           <a
@@ -165,6 +172,8 @@ export default function App() {
           </div>
         )}
 
+        {view === 'architecture' && <ArchitectureView />}
+        {view === 'tools' && <ToolsView />}
         {view === 'about' && <AboutView />}
       </main>
 

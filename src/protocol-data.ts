@@ -1,0 +1,285 @@
+/**
+ * Canonical data for the five Kinetic Gain Protocol Suite specs and the
+ * 18 tools exposed by mcp-kinetic-gain. Mirrored from
+ * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
+ * — re-sync when that file changes.
+ */
+import type { SpecKey } from './detect';
+
+export interface ProtocolSummary {
+  key: Exclude<SpecKey, 'unknown'>;
+  displayName: string;
+  fullName: string;
+  shortBlurb: string;
+  versionField: string;
+  /** /.well-known/... path, or null if the spec has no fixed location. */
+  wellKnownPath: string | null;
+  toolCount: number;
+  specRepo: string;
+  accent: ProtocolAccent;
+}
+
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose';
+
+export const PROTOCOLS: ProtocolSummary[] = [
+  {
+    key: 'aeo',
+    displayName: 'AEO Protocol',
+    fullName: 'Answer Engine Optimization Protocol',
+    shortBlurb:
+      'Entity declaration at a well-known URL. Authoritative claims, citation preferences, audit hooks.',
+    versionField: 'aeo_version',
+    wellKnownPath: '/.well-known/aeo.json',
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/aeo-protocol-spec',
+    accent: 'blue',
+  },
+  {
+    key: 'prompt-provenance',
+    displayName: 'Prompt Provenance',
+    fullName: 'Prompt Provenance v0.1',
+    shortBlurb:
+      'Versioned, lineaged, reviewable LLM prompt records. SHA-256 content hash, derivation type, eval results, approval state.',
+    versionField: 'provenance_version',
+    wellKnownPath: null,
+    toolCount: 3,
+    specRepo: 'https://github.com/mizcausevic-dev/prompt-provenance-spec',
+    accent: 'emerald',
+  },
+  {
+    key: 'agent-card',
+    displayName: 'Agent Cards',
+    fullName: 'Agent Capability Disclosure',
+    shortBlurb:
+      'Like HuggingFace model cards, but for agents. Capability surface, refusal taxonomy, deployment posture.',
+    versionField: 'agent_card_version',
+    wellKnownPath: '/.well-known/agents/<agent_id>.json',
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/agent-cards-spec',
+    accent: 'violet',
+  },
+  {
+    key: 'ai-evidence',
+    displayName: 'AI Evidence Format',
+    fullName: 'AI Evidence Format v0.1',
+    shortBlurb:
+      'Structured citations that travel with LLM-generated claims. Source span, retrieval confidence, content hash, synthesis role.',
+    versionField: 'evidence_version',
+    wellKnownPath: null,
+    toolCount: 3,
+    specRepo: 'https://github.com/mizcausevic-dev/ai-evidence-format-spec',
+    accent: 'amber',
+  },
+  {
+    key: 'mcp-tool-card',
+    displayName: 'MCP Tool Cards',
+    fullName: 'MCP Tool Card v0.1',
+    shortBlurb:
+      'Per-tool disclosure for Model Context Protocol servers. Schema, safety profile, tested-LLM matrix, performance, audit.',
+    versionField: 'tool_card_version',
+    wellKnownPath: '/.well-known/mcp-tools/<tool_name>.json',
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/mcp-tool-card-spec',
+    accent: 'rose',
+  },
+];
+
+export interface ToolInput {
+  name: string;
+  type: string;
+  required: boolean;
+  description: string;
+}
+
+export interface ToolSpec {
+  name: string;
+  protocol: Exclude<SpecKey, 'unknown'>;
+  description: string;
+  inputs: ToolInput[];
+}
+
+export const TOOLS: ToolSpec[] = [
+  // AEO Protocol — 4 tools
+  {
+    name: 'aeo_fetch',
+    protocol: 'aeo',
+    description:
+      'Fetch the full AEO Protocol declaration at an origin\'s /.well-known/aeo.json. Returns the raw conforming JSON.',
+    inputs: [
+      {
+        name: 'origin',
+        type: 'string (URL)',
+        required: true,
+        description: 'Origin URL, e.g. https://mizcausevic-dev.github.io',
+      },
+    ],
+  },
+  {
+    name: 'aeo_inspect',
+    protocol: 'aeo',
+    description:
+      'Structured summary of an AEO declaration: entity, source/verification counts, claim IDs, audit mode. Cheaper than aeo_fetch.',
+    inputs: [{ name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' }],
+  },
+  {
+    name: 'aeo_get_claim',
+    protocol: 'aeo',
+    description:
+      'Extract a single AEO claim by ID. Returns the claim object or a not-found error listing available IDs.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' },
+      { name: 'claim_id', type: 'string', required: true, description: 'Claim ID, e.g. "current-role".' },
+    ],
+  },
+  {
+    name: 'aeo_well_known_url',
+    protocol: 'aeo',
+    description: 'Compute the canonical /.well-known/aeo.json URL for an origin, without fetching.',
+    inputs: [{ name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' }],
+  },
+
+  // Prompt Provenance — 3 tools
+  {
+    name: 'prompt_provenance_validate',
+    protocol: 'prompt-provenance',
+    description:
+      'Validate a Prompt Provenance JSON document against the v0.1 schema. Returns { valid, prompt_id, version } or { valid: false, reason }.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Prompt Provenance JSON.' },
+    ],
+  },
+  {
+    name: 'prompt_provenance_inspect',
+    protocol: 'prompt-provenance',
+    description:
+      'Summary of a Prompt Provenance document: prompt identity, lineage, approval state, evaluation suites.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Prompt Provenance JSON.' },
+    ],
+  },
+  {
+    name: 'prompt_provenance_eval_result',
+    protocol: 'prompt-provenance',
+    description: 'Extract a single evaluation suite\'s result by name. Returns not-found with available suites if absent.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Prompt Provenance JSON.' },
+      { name: 'suite_name', type: 'string', required: true, description: 'Name of the evaluation suite.' },
+    ],
+  },
+
+  // Agent Cards — 4 tools
+  {
+    name: 'agent_card_well_known_url',
+    protocol: 'agent-card',
+    description: 'Compute the canonical Agent Card well-known URL: /.well-known/agents/<agent_id>.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' },
+      { name: 'agent_id', type: 'string', required: true, description: 'Agent identifier.' },
+    ],
+  },
+  {
+    name: 'agent_card_inspect',
+    protocol: 'agent-card',
+    description:
+      'Structured summary of an Agent Card. Pass either url (server fetches it) or document_json (inline JSON).',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'agent_card_tool_disclosure',
+    protocol: 'agent-card',
+    description:
+      'List the tools an agent declares, with side-effect class and (where present) MCP Tool Card URI for each.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'agent_card_validate',
+    protocol: 'agent-card',
+    description: 'Validate an Agent Card JSON document against the v0.1 schema.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Agent Card JSON.' },
+    ],
+  },
+
+  // AI Evidence Format — 3 tools
+  {
+    name: 'ai_evidence_validate',
+    protocol: 'ai-evidence',
+    description: 'Validate an AI Evidence object against the v0.1 schema.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Evidence object as JSON.' },
+    ],
+  },
+  {
+    name: 'ai_evidence_inspect',
+    protocol: 'ai-evidence',
+    description:
+      'Structured summary of an AI Evidence object: claim, source, retrieval method, synthesis role, hash, signed-or-not.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Evidence object as JSON.' },
+    ],
+  },
+  {
+    name: 'ai_evidence_verify_hash',
+    protocol: 'ai-evidence',
+    description:
+      'Compute canonical SHA-256 (LF endings, no trailing newline) over candidate_text and compare to verification.content_hash. Returns ok=true on match or { error: hash_mismatch, expected, recomputed }.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Evidence object as JSON.' },
+      {
+        name: 'candidate_text',
+        type: 'string',
+        required: true,
+        description: 'Text whose canonical SHA-256 should match the evidence content_hash.',
+      },
+    ],
+  },
+
+  // MCP Tool Cards — 4 tools
+  {
+    name: 'tool_card_well_known_url',
+    protocol: 'mcp-tool-card',
+    description: 'Compute the canonical MCP Tool Card well-known URL: /.well-known/mcp-tools/<tool_name>.json.',
+    inputs: [
+      { name: 'mcp_server_origin', type: 'string (URL)', required: true, description: 'Origin of the MCP server.' },
+      { name: 'tool_name', type: 'string', required: true, description: 'Tool name.' },
+    ],
+  },
+  {
+    name: 'tool_card_inspect',
+    protocol: 'mcp-tool-card',
+    description:
+      'Structured summary of an MCP Tool Card: tool identity, safety profile (side-effect class, PII/secrets exposure, approval), test count, p99 latency.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Tool Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Tool Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'tool_card_tested_with',
+    protocol: 'mcp-tool-card',
+    description:
+      'Return the tested-LLM entries for a tool, optionally filtered by a case-insensitive substring of the LLM identifier.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Tool Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Tool Card as inline JSON.' },
+      { name: 'llm_filter', type: 'string', required: false, description: 'Substring of LLM identifier (optional).' },
+    ],
+  },
+  {
+    name: 'tool_card_validate',
+    protocol: 'mcp-tool-card',
+    description: 'Validate an MCP Tool Card JSON document against the v0.1 schema.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tool Card JSON.' },
+    ],
+  },
+];
+
+export const MCP_SERVER_REPO = 'https://github.com/mizcausevic-dev/mcp-kinetic-gain';
+export const TOTAL_TOOL_COUNT = TOOLS.length;
