@@ -161,6 +161,62 @@ export const MCP_TOOL_CARD_EXAMPLE = {
   audit: { log_uri: 'https://audit.kineticgain.com/mcp/billing-lookup', retention_days: 365 },
 };
 
+export const TUTOR_CARD_EXAMPLE = {
+  tutor_card_version: '0.1',
+  tutor: {
+    id: 'kineticgain-k12-math-tutor',
+    name: 'Kinetic Gain K-12 Math Tutor',
+    version: '1.4.0',
+    provider: 'Kinetic Gain Edu',
+    description: 'Personal AI math tutor for K-12. Socratic; produces step-by-step explanations; will not complete homework or assessment items.',
+  },
+  audience: {
+    age_range_min: 5,
+    age_range_max: 18,
+    grade_range_min: 'K',
+    grade_range_max: '12',
+    language_codes: ['en', 'es'],
+  },
+  subject_scope: {
+    primary_subjects: ['Math'],
+    topics_included: ['arithmetic', 'algebra', 'geometry', 'statistics'],
+    topics_excluded: ['differential equations', 'linear algebra'],
+  },
+  pedagogy: {
+    approach: 'socratic',
+    homework_policy: 'guide_only',
+    assessment_policy: 'refuse',
+    supports_visual_explanations: true,
+    supports_step_by_step_breakdown: true,
+  },
+  curriculum_alignment: [
+    { framework: 'Common Core State Standards (Math)', version: '2010' },
+  ],
+  safety: {
+    content_filter_strength: 'strict',
+    mandated_reporter_protocol: true,
+    human_in_loop_required: ['mental_health_disclosure', 'abuse_disclosure', 'self_harm_disclosure'],
+    blocks_explicit_content: true,
+    blocks_drug_alcohol_content: true,
+    blocks_violence_content: true,
+    blocks_political_advocacy: true,
+  },
+  data_privacy: {
+    ferpa_compliant: true,
+    coppa_compliant: true,
+    gdpr_compliant: true,
+    retention_days: 90,
+    data_sharing_with_parents: 'summaries_only',
+    data_sharing_with_school: 'summaries_only',
+    third_party_data_sharing: false,
+    model_training_consent_required: true,
+  },
+  agent_card_uri: 'https://edu.kineticgain.com/.well-known/agents/k12-math-tutor.json',
+  evaluations: [
+    { suite: 'k12-math-accuracy-v3', result_uri: 'https://eval.kineticgain.com/runs/k12-math-1.4.0', metrics: { accuracy: 0.94 }, ran_at: '2026-04-12T00:00:00Z' },
+  ],
+};
+
 import type { SpecKey } from './detect';
 
 export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
@@ -169,4 +225,5 @@ export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
   'agent-card': AGENT_CARD_EXAMPLE,
   'ai-evidence': AI_EVIDENCE_EXAMPLE,
   'mcp-tool-card': MCP_TOOL_CARD_EXAMPLE,
+  'tutor-card': TUTOR_CARD_EXAMPLE,
 };

@@ -9,6 +9,7 @@ const accentBadge: Record<ProtocolAccent, string> = {
   violet: 'bg-violet-50 text-violet-700 border-violet-200',
   amber: 'bg-amber-50 text-amber-700 border-amber-200',
   rose: 'bg-rose-50 text-rose-700 border-rose-200',
+  teal: 'bg-teal-50 text-teal-700 border-teal-200',
 };
 
 const accentBorder: Record<ProtocolAccent, string> = {
@@ -17,6 +18,7 @@ const accentBorder: Record<ProtocolAccent, string> = {
   violet: 'border-violet-300',
   amber: 'border-amber-300',
   rose: 'border-rose-300',
+  teal: 'border-teal-300',
 };
 
 const accentLeft: Record<ProtocolAccent, string> = {
@@ -25,6 +27,7 @@ const accentLeft: Record<ProtocolAccent, string> = {
   violet: 'border-l-violet-500',
   amber: 'border-l-amber-500',
   rose: 'border-l-rose-500',
+  teal: 'border-l-teal-500',
 };
 
 const protocolByKey = new Map(PROTOCOLS.map((p) => [p.key, p]));
@@ -55,7 +58,7 @@ export function ToolsView() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">All {TOOLS.length} tools, searchable.</h1>
         <p className="text-slate-600 leading-relaxed">
-          Every tool exposed by <code className="code">mcp-kinetic-gain</code> across the five Kinetic Gain
+          Every tool exposed by <code className="code">mcp-kinetic-gain</code> across the six Kinetic Gain
           Protocol Suite specs. Click a tool card to see its input parameters.
         </p>
       </header>
@@ -101,7 +104,7 @@ export function ToolsView() {
                   <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${barColor(p.accent)}`}
-                      style={{ width: `${(p.toolCount / 4) * 100}%` }}
+                      style={{ width: `${(p.toolCount / 6) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -265,5 +268,7 @@ function barColor(accent: ProtocolAccent): string {
       return 'bg-amber-500';
     case 'rose':
       return 'bg-rose-500';
+    case 'teal':
+      return 'bg-teal-500';
   }
 }

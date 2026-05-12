@@ -11,6 +11,7 @@ export type SpecKey =
   | 'agent-card'
   | 'ai-evidence'
   | 'mcp-tool-card'
+  | 'tutor-card'
   | 'unknown';
 
 export interface SpecInfo {
@@ -56,6 +57,13 @@ export const SPECS: Record<Exclude<SpecKey, 'unknown'>, SpecInfo> = {
     versionField: 'tool_card_version',
     specRepo: 'https://github.com/mizcausevic-dev/mcp-tool-card-spec',
     accent: 'rose',
+  },
+  'tutor-card': {
+    key: 'tutor-card',
+    displayName: 'AI Tutor Card',
+    versionField: 'tutor_card_version',
+    specRepo: 'https://github.com/mizcausevic-dev/ai-tutor-card-spec',
+    accent: 'teal',
   },
 };
 

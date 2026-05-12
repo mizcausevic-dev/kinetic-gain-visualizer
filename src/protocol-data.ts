@@ -1,8 +1,11 @@
 /**
- * Canonical data for the five Kinetic Gain Protocol Suite specs and the
- * 18 tools exposed by mcp-kinetic-gain. Mirrored from
+ * Canonical data for the six Kinetic Gain Protocol Suite specs and the
+ * 24 tools exposed by mcp-kinetic-gain. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
+ *
+ * The six specs are five core (AEO Protocol, Prompt Provenance, Agent Cards,
+ * AI Evidence Format, MCP Tool Cards) plus one EdTech extension (AI Tutor Cards).
  */
 import type { SpecKey } from './detect';
 
@@ -19,7 +22,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -81,6 +84,18 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 4,
     specRepo: 'https://github.com/mizcausevic-dev/mcp-tool-card-spec',
     accent: 'rose',
+  },
+  {
+    key: 'tutor-card',
+    displayName: 'AI Tutor Cards',
+    fullName: 'AI Tutor Card v0.1 (EdTech extension)',
+    shortBlurb:
+      'AI tutor disclosure for K-12, higher-ed, and corporate training. Audience, subject scope, pedagogy, FERPA/COPPA/GDPR data privacy, safety posture.',
+    versionField: 'tutor_card_version',
+    wellKnownPath: '/.well-known/tutors/<tutor_id>.json',
+    toolCount: 6,
+    specRepo: 'https://github.com/mizcausevic-dev/ai-tutor-card-spec',
+    accent: 'teal',
   },
 ];
 
@@ -277,6 +292,60 @@ export const TOOLS: ToolSpec[] = [
     description: 'Validate an MCP Tool Card JSON document against the v0.1 schema.',
     inputs: [
       { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tool Card JSON.' },
+    ],
+  },
+
+  // AI Tutor Cards (EdTech extension) — 6 tools
+  {
+    name: 'tutor_card_well_known_url',
+    protocol: 'tutor-card',
+    description: 'Compute the canonical AI Tutor Card well-known URL: /.well-known/tutors/<tutor_id>.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' },
+      { name: 'tutor_id', type: 'string', required: true, description: 'Tutor identifier.' },
+    ],
+  },
+  {
+    name: 'tutor_card_fetch',
+    protocol: 'tutor-card',
+    description: 'Fetch a Tutor Card from an origin\'s /.well-known/tutors/<tutor_id>.json. Returns the raw conforming JSON.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL.' },
+      { name: 'tutor_id', type: 'string', required: true, description: 'Tutor identifier.' },
+    ],
+  },
+  {
+    name: 'tutor_card_validate',
+    protocol: 'tutor-card',
+    description: 'Validate a Tutor Card JSON document against the v0.1 schema, including the COPPA conditional rule (audience.age_range_min < 13 ⇒ data_privacy.coppa_compliant must be true).',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tutor Card JSON.' },
+    ],
+  },
+  {
+    name: 'tutor_card_inspect',
+    protocol: 'tutor-card',
+    description: 'Structured summary of a Tutor Card: tutor identity, audience, pedagogy approach, safety strength, FERPA/COPPA/GDPR posture, evaluation count.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Tutor Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Tutor Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'tutor_card_subject_check',
+    protocol: 'tutor-card',
+    description: 'Classify a topic against the tutor\'s subject scope. Returns one of: primary, included, excluded, unknown — with a brief explanation.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tutor Card JSON.' },
+      { name: 'topic', type: 'string', required: true, description: 'Topic to classify, e.g. "algebra" or "differential equations".' },
+    ],
+  },
+  {
+    name: 'tutor_card_coppa_check',
+    protocol: 'tutor-card',
+    description: 'Enforce the spec\'s COPPA conditional rule: if audience.age_range_min < 13 then data_privacy.coppa_compliant MUST be true. Returns { ok: true } or { error: coppa_violation, reason }.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Tutor Card JSON.' },
     ],
   },
 ];
