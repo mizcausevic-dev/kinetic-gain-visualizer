@@ -11,6 +11,7 @@ import { AiEvidenceRenderer } from './renderers/AiEvidenceRenderer';
 import { McpToolCardRenderer } from './renderers/McpToolCardRenderer';
 import { TutorCardRenderer } from './renderers/TutorCardRenderer';
 import { DisclosureRenderer } from './renderers/DisclosureRenderer';
+import { ClassroomAupRenderer } from './renderers/ClassroomAupRenderer';
 import { RawJsonRenderer } from './renderers/RawJsonRenderer';
 
 import { ArchitectureView } from './views/Architecture';
@@ -26,6 +27,7 @@ const accentBadge: Record<string, string> = {
   rose: 'bg-rose-100 text-rose-800 border-rose-200',
   teal: 'bg-teal-100 text-teal-800 border-teal-200',
   indigo: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+  fuchsia: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
 };
 
 const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'about'];
@@ -139,6 +141,8 @@ export default function App() {
               <TutorCardRenderer doc={parsed as never} />
             ) : detected === 'student-ai-disclosure' ? (
               <DisclosureRenderer doc={parsed as never} />
+            ) : detected === 'classroom-aup' ? (
+              <ClassroomAupRenderer doc={parsed as never} />
             ) : (
               <RawJsonRenderer doc={parsed} />
             )}
@@ -226,13 +230,13 @@ function AboutView() {
   return (
     <div className="max-w-3xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight mb-3">One visualizer. Seven specs.</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-3">One visualizer. Eight specs.</h1>
         <p className="text-slate-600 leading-relaxed">
           The Kinetic Gain Protocol Suite is a family of open JSON specifications for the answer-engine era:
           entity declaration, prompt lineage, agent capability disclosure, citation evidence, MCP tool disclosure,
-          AI tutor disclosure, and student-side AI disclosure (the latter two are EdTech extensions). This
-          visualizer accepts a document for any of the seven and dispatches to the right renderer based on the
-          top-level <code className="code">*_version</code> field.
+          and a three-spec EdTech trio (AI Tutor Cards, Student AI Disclosure, Classroom AI AUP). This visualizer
+          accepts a document for any of the eight and dispatches to the right renderer based on the top-level{' '}
+          <code className="code">*_version</code> field.
         </p>
       </div>
 
@@ -268,6 +272,7 @@ function AboutView() {
   "tool_card_version":    "0.1"   →  MCP Tool Cards
   "tutor_card_version":   "0.1"   →  AI Tutor Cards
   "disclosure_version":   "0.1"   →  Student AI Disclosure
+  "aup_version":          "0.1"   →  Classroom AI AUP
 }`}
         </pre>
       </div>

@@ -1,12 +1,12 @@
 /**
- * Canonical data for the seven Kinetic Gain Protocol Suite specs and the
- * 29 tools exposed by mcp-kinetic-gain. Mirrored from
+ * Canonical data for the eight Kinetic Gain Protocol Suite specs and the
+ * 34 tools exposed by mcp-kinetic-gain v0.4.0. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
- * The seven specs are five core (AEO Protocol, Prompt Provenance, Agent
- * Cards, AI Evidence Format, MCP Tool Cards) plus two EdTech extensions
- * (AI Tutor Cards, Student AI Disclosure).
+ * The eight specs: five core (AEO, Prompt Provenance, Agent Cards, AI
+ * Evidence Format, MCP Tool Cards) plus the EdTech trio (AI Tutor Cards,
+ * Student AI Disclosure, Classroom AI AUP).
  */
 import type { SpecKey } from './detect';
 
@@ -23,7 +23,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -109,6 +109,18 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 5,
     specRepo: 'https://github.com/mizcausevic-dev/student-ai-disclosure-spec',
     accent: 'indigo',
+  },
+  {
+    key: 'classroom-aup',
+    displayName: 'Classroom AI AUP',
+    fullName: 'Classroom AI Acceptable Use Policy v0.1 (EdTech trio · district-side)',
+    shortBlurb:
+      'District / school / course / assignment AI policy: permitted use, prohibited use, disclosure requirements, supervision, vendor requirements (FERPA / COPPA / GDPR), enforcement. Headline tool joins AUP + Disclosure into a single allow/deny.',
+    versionField: 'aup_version',
+    wellKnownPath: '/.well-known/ai-aup.json',
+    toolCount: 5,
+    specRepo: 'https://github.com/mizcausevic-dev/classroom-ai-aup-spec',
+    accent: 'fuchsia',
   },
 ];
 
@@ -402,9 +414,54 @@ export const TOOLS: ToolSpec[] = [
   {
     name: 'disclosure_aup_check',
     protocol: 'student-ai-disclosure',
-    description: 'Surface the disclosure\'s policy posture: declared_compliant / declared_non_compliant / aup_referenced_but_unclaimed / no_aup_reference. v0.3 reports declared posture only; future versions will fetch and cross-check against the Classroom AI AUP spec.',
+    description: 'Surface the disclosure\'s policy posture: declared_compliant / declared_non_compliant / aup_referenced_but_unclaimed / no_aup_reference. Reports declared posture only; for the actual join use aup_check_compliance.',
     inputs: [
       { name: 'document_json', type: 'string (JSON)', required: true, description: 'Disclosure JSON.' },
+    ],
+  },
+
+  // Classroom AI AUP (EdTech extension — closes the trio) — 5 tools
+  {
+    name: 'aup_well_known_url',
+    protocol: 'classroom-aup',
+    description: 'Compute the canonical Classroom AI AUP well-known URL: /.well-known/ai-aup.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Origin URL of the institution.' },
+    ],
+  },
+  {
+    name: 'aup_fetch',
+    protocol: 'classroom-aup',
+    description: 'Fetch a Classroom AI AUP from a URL. Returns the parsed, schema-validated JSON document.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: true, description: 'AUP URL.' },
+    ],
+  },
+  {
+    name: 'aup_validate',
+    protocol: 'classroom-aup',
+    description: 'Validate a Classroom AI AUP JSON document against the v0.1 schema. Enforces conditional rules: course scope requires non-empty course_ids; assignment scope requires non-empty assignment_ids; assistance_extent_max=none forbids permitted_roles; expires_at must follow effective_at; roles cannot be both permitted and prohibited.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'AUP JSON.' },
+    ],
+  },
+  {
+    name: 'aup_inspect',
+    protocol: 'classroom-aup',
+    description: 'Structured summary of a Classroom AI AUP: policy identity, scope, permitted/prohibited role counts, disclosure requirements, supervision level, vendor requirements posture, parent-consent gating.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'AUP URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'AUP as inline JSON.' },
+    ],
+  },
+  {
+    name: 'aup_check_compliance',
+    protocol: 'classroom-aup',
+    description: 'HEADLINE — joins an AUP with a Student AI Disclosure and decides whether the submission complies. Eight gates: effective window, signature, artifact_hash, teacher acknowledgment, prompt evidence mode, permitted/prohibited roles, assistance-extent ceiling, no-AI vs ai_used. Returns { allowed, violations[] }, one entry per failed gate.',
+    inputs: [
+      { name: 'aup_json', type: 'string (JSON)', required: false, description: 'AUP as inline JSON.' },
+      { name: 'aup_url', type: 'string (URL)', required: false, description: 'AUP URL — server fetches it.' },
+      { name: 'disclosure_json', type: 'string (JSON)', required: true, description: 'Student AI Disclosure as inline JSON.' },
     ],
   },
 ];

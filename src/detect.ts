@@ -13,6 +13,7 @@ export type SpecKey =
   | 'mcp-tool-card'
   | 'tutor-card'
   | 'student-ai-disclosure'
+  | 'classroom-aup'
   | 'unknown';
 
 export interface SpecInfo {
@@ -72,6 +73,13 @@ export const SPECS: Record<Exclude<SpecKey, 'unknown'>, SpecInfo> = {
     versionField: 'disclosure_version',
     specRepo: 'https://github.com/mizcausevic-dev/student-ai-disclosure-spec',
     accent: 'indigo',
+  },
+  'classroom-aup': {
+    key: 'classroom-aup',
+    displayName: 'Classroom AI AUP',
+    versionField: 'aup_version',
+    specRepo: 'https://github.com/mizcausevic-dev/classroom-ai-aup-spec',
+    accent: 'fuchsia',
   },
 };
 

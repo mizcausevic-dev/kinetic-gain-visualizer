@@ -11,6 +11,7 @@ const accentBadge: Record<ProtocolAccent, string> = {
   rose: 'bg-rose-50 text-rose-700 border-rose-200',
   teal: 'bg-teal-50 text-teal-700 border-teal-200',
   indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  fuchsia: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200',
 };
 
 const accentBorder: Record<ProtocolAccent, string> = {
@@ -21,6 +22,7 @@ const accentBorder: Record<ProtocolAccent, string> = {
   rose: 'border-rose-300',
   teal: 'border-teal-300',
   indigo: 'border-indigo-300',
+  fuchsia: 'border-fuchsia-300',
 };
 
 const accentLeft: Record<ProtocolAccent, string> = {
@@ -31,6 +33,7 @@ const accentLeft: Record<ProtocolAccent, string> = {
   rose: 'border-l-rose-500',
   teal: 'border-l-teal-500',
   indigo: 'border-l-indigo-500',
+  fuchsia: 'border-l-fuchsia-500',
 };
 
 const protocolByKey = new Map(PROTOCOLS.map((p) => [p.key, p]));
@@ -61,7 +64,7 @@ export function ToolsView() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">All {TOOLS.length} tools, searchable.</h1>
         <p className="text-slate-600 leading-relaxed">
-          Every tool exposed by <code className="code">mcp-kinetic-gain</code> across the seven Kinetic Gain
+          Every tool exposed by <code className="code">mcp-kinetic-gain</code> across the eight Kinetic Gain
           Protocol Suite specs. Click a tool card to see its input parameters.
         </p>
       </header>
@@ -275,5 +278,7 @@ function barColor(accent: ProtocolAccent): string {
       return 'bg-teal-500';
     case 'indigo':
       return 'bg-indigo-500';
+    case 'fuchsia':
+      return 'bg-fuchsia-500';
   }
 }
