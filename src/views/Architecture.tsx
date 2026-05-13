@@ -11,6 +11,8 @@ const accentRing: Record<string, string> = {
   teal: 'border-teal-300 hover:border-teal-500',
   indigo: 'border-indigo-300 hover:border-indigo-500',
   fuchsia: 'border-fuchsia-300 hover:border-fuchsia-500',
+  cyan: 'border-cyan-300 hover:border-cyan-500',
+  red: 'border-red-300 hover:border-red-500',
 };
 
 const accentDot: Record<string, string> = {
@@ -22,6 +24,8 @@ const accentDot: Record<string, string> = {
   teal: 'bg-teal-500',
   indigo: 'bg-indigo-500',
   fuchsia: 'bg-fuchsia-500',
+  cyan: 'bg-cyan-500',
+  red: 'bg-red-500',
 };
 
 const accentText: Record<string, string> = {
@@ -33,6 +37,8 @@ const accentText: Record<string, string> = {
   teal: 'text-teal-700',
   indigo: 'text-indigo-700',
   fuchsia: 'text-fuchsia-700',
+  cyan: 'text-cyan-700',
+  red: 'text-red-700',
 };
 
 export function ArchitectureView() {

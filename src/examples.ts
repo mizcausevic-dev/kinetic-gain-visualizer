@@ -356,6 +356,161 @@ export const CLASSROOM_AUP_EXAMPLE = {
   audit_log_uri: 'https://lincoln-high-district-42.edu/.well-known/ai-aup-changelog.json',
 };
 
+export const CLINICAL_AI_EXAMPLE = {
+  clinical_ai_card_version: '0.1',
+  system: {
+    id: 'kineticgain-sepsis-ews',
+    name: 'Kinetic Gain Sepsis Early Warning System',
+    version: '2.3.1',
+    provider: 'Kinetic Gain Health',
+    homepage: 'https://health.kineticgain.com/sepsis-ews',
+    description: 'Continuous-monitoring AI system surfacing high-risk-of-sepsis patients to clinicians. SaMD class II; clinician override required on every recommendation.',
+  },
+  clinical_context: {
+    indication: 'Early detection of adult inpatient sepsis using vital signs, lab values, and nursing documentation in real time. Surfaces a risk score 6-12 hours before traditional EWS triggers.',
+    care_settings: ['inpatient', 'icu'],
+    patient_population: {
+      age_range_min: 18,
+      age_range_max: 89,
+      exclusions: ['pediatrics-under-18', 'obstetric-patients', 'comfort-care-only'],
+    },
+    intended_use: 'Clinical decision support for adult inpatient providers to identify patients at elevated risk of sepsis onset.',
+    off_label_uses_prohibited: true,
+  },
+  regulatory: {
+    fda_status: '510k_cleared',
+    fda_clearance_number: 'K233456',
+    fda_clearance_uri: 'https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/pmn.cfm?ID=K233456',
+    iso_certifications: ['ISO 13485', 'IEC 62304', 'ISO 14971'],
+    is_medical_device: true,
+    is_clinical_decision_support: true,
+    is_software_as_medical_device: true,
+    samd_class: 'II',
+    samd_classification_rationale: 'Healthcare situation: serious. Healthcare decision: drive clinical management. Per IMDRF: Class II.',
+  },
+  clinical_role: {
+    decision_support_level: 'advisory',
+    clinician_override_required: true,
+    patient_facing_only: false,
+    transparency_to_patient_required: true,
+    pre_authorization_use: false,
+  },
+  evidence: {
+    validation_studies: [
+      {
+        title: 'Multi-site prospective validation of Kinetic Gain Sepsis EWS across 4 US academic centers',
+        uri: 'https://health.kineticgain.com/studies/sepsis-ews-multisite-2025.pdf',
+        population_size: 48217,
+        primary_outcome: 'Detection of sepsis onset (Sepsis-3 criteria) at least 6 hours before standard MEWS trigger',
+        results_summary: 'Achieved sensitivity 0.84, specificity 0.78, AUC 0.89. Sensitivity remained >0.80 across age, sex, and self-reported race subgroups.',
+        peer_reviewed: true,
+        published_at: '2025-09-04T00:00:00Z',
+      },
+    ],
+    training_data_sources: ['MIMIC-IV', 'eICU Collaborative', 'Internal multi-site dataset N=287k'],
+    bias_audit_uri: 'https://health.kineticgain.com/audits/sepsis-ews-bias-2025-Q4.pdf',
+    performance_metrics: {
+      measurement_population: 'Adult inpatient encounters at 4 US academic centers (validation cohort, 2024-2025)',
+      sensitivity: 0.84,
+      specificity: 0.78,
+      auc: 0.89,
+      false_positive_rate: 0.22,
+      false_negative_rate: 0.16,
+      ppv: 0.42,
+      npv: 0.96,
+    },
+  },
+  patient_data: {
+    phi_processed: true,
+    hipaa_compliant: true,
+    baa_required: true,
+    de_identification_method: 'not-applicable',
+    retention_days: 365,
+    patient_consent_required: false,
+    third_party_data_sharing: false,
+    model_training_consent_required: false,
+  },
+  safety: {
+    human_in_loop_required_for: ['pediatric-patient-mistakenly-routed', 'obstetric-patient', 'comfort-care-only-patient'],
+    mandatory_reporting_categories: ['adverse-drug-event-related-to-acted-on-alert'],
+    blocks_diagnostic_claims: false,
+    treatment_recommendation_disclaimer_required: false,
+  },
+  ehr_integration: {
+    fhir_version: 'R4',
+    supports_smart_on_fhir: true,
+    supports_cds_hooks: true,
+    ehr_vendors_supported: ['Epic', 'Cerner', 'MEDITECH'],
+  },
+  agent_card_uri: 'https://health.kineticgain.com/.well-known/agents/sepsis-ews.json',
+  audit: {
+    incident_card_index_uri: 'https://health.kineticgain.com/.well-known/ai-incidents.json',
+  },
+};
+
+export const AI_INCIDENT_EXAMPLE = {
+  incident_card_version: '0.1',
+  incident: {
+    id: 'INC-2026-04-22-kineticgain-001',
+    title: 'K-12 math tutor failed to escalate self-harm disclosure to mandated-reporter workflow',
+    severity: 'critical',
+    categories: ['mandated_reporter_failure'],
+    discovered_at: '2026-04-22T14:30:00Z',
+    occurred_at: '2026-04-21T19:14:00Z',
+    disclosed_at: '2026-04-23T09:00:00Z',
+    resolved_at: '2026-04-25T16:00:00Z',
+    status: 'resolved',
+  },
+  affected: {
+    vendor: 'Kinetic Gain Edu',
+    products: ['Kinetic Gain K-12 Math Tutor'],
+    versions: ['1.4.0'],
+    tutor_card_uris: ['https://edu.kineticgain.com/.well-known/tutors/k12-math-tutor.json'],
+    agent_card_uris: ['https://edu.kineticgain.com/.well-known/agents/k12-math-tutor.json'],
+    affected_user_count: { kind: 'exact', count: 1 },
+    affected_populations: ['k12-students-grade-9'],
+  },
+  summary: 'During an algebra tutoring session, a 14-year-old learner included a self-harm disclosure within a word-problem context. The tutor\'s Socratic prompt classifier correctly identified the math content but did not invoke the mandated_reporter_protocol handler. The Tutor Card declares mandated_reporter_protocol=true; the failure is a refusal-taxonomy compliance violation.',
+  root_cause: {
+    category: 'refusal_taxonomy_gap',
+    description: 'The disclosure classifier was trained on isolated-utterance examples and did not generalize to disclosures embedded inside an unrelated content frame (a word problem). The classifier returned mathematics_homework with confidence 0.94 and short-circuited before the mandated-reporter chain could run.',
+  },
+  harm: {
+    severity_justification: 'K-12 mandated-reporter failure involving an under-18 learner. Critical per spec §6.6.',
+    manifested: true,
+    narrative: 'The student did not receive immediate counselor escalation. A school counselor reached the family 18 hours later via separate channels. No physical harm; the gap in the escalation chain is the incident.',
+  },
+  mitigation: {
+    actions_taken: [
+      'Added a parallel disclosure classifier that runs unconditionally on every learner turn regardless of primary-content classification.',
+      'Added a regression test corpus of 312 embedded-disclosure examples across content frames.',
+      'Notified all 14 K-12 districts running v1.4.0 within 24 hours.',
+    ],
+    permanent_fix: true,
+    rollout_status: 'deployed',
+    workaround_for_users: 'v1.4.0 has been removed from distribution. Districts should upgrade to v1.4.2.',
+  },
+  regulatory: {
+    reported_to: ['ferpa', 'state-attorney-general'],
+    reporting_deadline_met: true,
+    regulatory_filing_uris: [
+      'https://edu.kineticgain.com/regulatory/2026-04-22-ferpa-notice.pdf',
+      'https://edu.kineticgain.com/regulatory/2026-04-22-state-ag-notice.pdf',
+    ],
+  },
+  published_by: {
+    name: 'Kinetic Gain Edu — Trust & Safety',
+    role: 'vendor',
+    contact_uri: 'mailto:trust-safety@edu.kineticgain.com',
+  },
+  published_at: '2026-04-23T09:00:00Z',
+  last_updated_at: '2026-04-26T16:30:00Z',
+  revision: {
+    number: 3,
+    change_summary: 'Marked resolved; added permanent_fix=true; appended postmortem blog reference.',
+  },
+};
+
 import type { SpecKey } from './detect';
 
 export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
@@ -367,4 +522,6 @@ export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
   'tutor-card': TUTOR_CARD_EXAMPLE,
   'student-ai-disclosure': STUDENT_DISCLOSURE_EXAMPLE,
   'classroom-aup': CLASSROOM_AUP_EXAMPLE,
+  'clinical-ai': CLINICAL_AI_EXAMPLE,
+  'ai-incident-card': AI_INCIDENT_EXAMPLE,
 };

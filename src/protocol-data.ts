@@ -1,12 +1,13 @@
 /**
- * Canonical data for the eight Kinetic Gain Protocol Suite specs and the
- * 34 tools exposed by mcp-kinetic-gain v0.4.0. Mirrored from
+ * Canonical data for all ten Kinetic Gain Protocol Suite specs and the
+ * 43 tools exposed by mcp-kinetic-gain v0.5.0. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
- * The eight specs: five core (AEO, Prompt Provenance, Agent Cards, AI
- * Evidence Format, MCP Tool Cards) plus the EdTech trio (AI Tutor Cards,
- * Student AI Disclosure, Classroom AI AUP).
+ * The ten specs: five core (AEO, Prompt Provenance, Agent Cards, AI Evidence
+ * Format, MCP Tool Cards), the EdTech trio (Tutor / Student / Classroom AUP),
+ * the HealthTech extension (Clinical AI Disclosure), and the cross-cutting
+ * AI Incident Card.
  */
 import type { SpecKey } from './detect';
 
@@ -23,7 +24,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia' | 'cyan' | 'red';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -121,6 +122,30 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 5,
     specRepo: 'https://github.com/mizcausevic-dev/classroom-ai-aup-spec',
     accent: 'fuchsia',
+  },
+  {
+    key: 'clinical-ai',
+    displayName: 'Clinical AI Disclosure',
+    fullName: 'Clinical AI Disclosure v0.1 (HealthTech extension)',
+    shortBlurb:
+      'Healthcare-vertical disclosure for clinical AI systems. FDA / SaMD posture, HIPAA + BAA, bias audits, EHR (FHIR / SMART / CDS Hooks). Schema-enforced autonomy ⇔ medical-device coupling.',
+    versionField: 'clinical_ai_card_version',
+    wellKnownPath: '/.well-known/clinical-ai/<system_id>.json',
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/clinical-ai-disclosure-spec',
+    accent: 'cyan',
+  },
+  {
+    key: 'ai-incident-card',
+    displayName: 'AI Incident Card',
+    fullName: 'AI Incident Card v0.1 (cross-cutting)',
+    shortBlurb:
+      'Vendor-published post-incident disclosure — the "CVE for AI agents". Cross-references every other affected document. Headline tool: incident_index_fetch summarizes a vendor\'s full incident history in one call.',
+    versionField: 'incident_card_version',
+    wellKnownPath: '/.well-known/ai-incidents/<id>.json',
+    toolCount: 5,
+    specRepo: 'https://github.com/mizcausevic-dev/ai-incident-card-spec',
+    accent: 'red',
   },
 ];
 
@@ -462,6 +487,84 @@ export const TOOLS: ToolSpec[] = [
       { name: 'aup_json', type: 'string (JSON)', required: false, description: 'AUP as inline JSON.' },
       { name: 'aup_url', type: 'string (URL)', required: false, description: 'AUP URL — server fetches it.' },
       { name: 'disclosure_json', type: 'string (JSON)', required: true, description: 'Student AI Disclosure as inline JSON.' },
+    ],
+  },
+  // Clinical AI Disclosure — 4 tools
+  {
+    name: 'clinical_ai_well_known_url',
+    protocol: 'clinical-ai',
+    description: 'Compute the canonical Clinical AI Card well-known URL: /.well-known/clinical-ai/<system_id>.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Vendor origin.' },
+      { name: 'system_id', type: 'string', required: true, description: 'Stable system identifier (kebab-case).' },
+    ],
+  },
+  {
+    name: 'clinical_ai_fetch',
+    protocol: 'clinical-ai',
+    description: 'Fetch a Clinical AI Card from a URL. Returns the parsed, schema-validated JSON document.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: true, description: 'Card URL.' },
+    ],
+  },
+  {
+    name: 'clinical_ai_validate',
+    protocol: 'clinical-ai',
+    description: 'Validate a Clinical AI Card against the v0.1 schema. Enforces headline rules: autonomy ⇔ medical device (FDA position), SaMD class + rationale completeness, FDA-clearance documentation, PHI ⇒ explicit HIPAA + BAA, bias_audit_uri required for SaMD II+ / autonomous / pre-authorization.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Card JSON.' },
+    ],
+  },
+  {
+    name: 'clinical_ai_inspect',
+    protocol: 'clinical-ai',
+    description: 'Structured summary of a Clinical AI Card: system identity, clinical context, regulatory posture, clinical role, evidence (studies + bias audit + performance metrics), HIPAA / BAA, EHR integration, safety + mandated reporting.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Card as inline JSON.' },
+    ],
+  },
+  // AI Incident Card — 5 tools
+  {
+    name: 'incident_well_known_url',
+    protocol: 'ai-incident-card',
+    description: 'Compute the canonical AI Incident Card well-known URL: /.well-known/ai-incidents/<id>.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Vendor origin.' },
+      { name: 'incident_id', type: 'string', required: true, description: 'Convention: INC-<YYYY-MM-DD>-<vendor>-<seq>.' },
+    ],
+  },
+  {
+    name: 'incident_fetch',
+    protocol: 'ai-incident-card',
+    description: 'Fetch an AI Incident Card from a URL. Returns the parsed, schema-validated JSON document.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: true, description: 'Card URL.' },
+    ],
+  },
+  {
+    name: 'incident_validate',
+    protocol: 'ai-incident-card',
+    description: 'Validate an AI Incident Card against the v0.1 schema. Enforces conditional rules: status=resolved requires resolved_at; status=withdrawn requires withdrawal block; non-empty regulatory.reported_to requires non-empty regulatory_filing_uris; root_cause=other and categories containing "other" both require _other_text fields.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Card JSON.' },
+    ],
+  },
+  {
+    name: 'incident_inspect',
+    protocol: 'ai-incident-card',
+    description: 'Structured summary of an AI Incident Card: identity, severity, status, categories, affected vendor/products with cross-spec ref counts, root cause, harm, mitigation, regulatory filings, withdrawal posture, revision metadata.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Card URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'incident_index_fetch',
+    protocol: 'ai-incident-card',
+    description: 'HEADLINE — fetch a vendor\'s /.well-known/ai-incidents.json index and return a procurement-friendly summary: total count, breakdown by severity, breakdown by status, IDs sorted by disclosed_at descending. The cheapest possible vendor-history scan for CISO / procurement.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Vendor origin.' },
     ],
   },
 ];

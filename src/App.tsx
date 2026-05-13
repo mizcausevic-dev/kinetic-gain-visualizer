@@ -12,6 +12,8 @@ import { McpToolCardRenderer } from './renderers/McpToolCardRenderer';
 import { TutorCardRenderer } from './renderers/TutorCardRenderer';
 import { DisclosureRenderer } from './renderers/DisclosureRenderer';
 import { ClassroomAupRenderer } from './renderers/ClassroomAupRenderer';
+import { ClinicalAiRenderer } from './renderers/ClinicalAiRenderer';
+import { IncidentCardRenderer } from './renderers/IncidentCardRenderer';
 import { RawJsonRenderer } from './renderers/RawJsonRenderer';
 
 import { ArchitectureView } from './views/Architecture';
@@ -28,6 +30,8 @@ const accentBadge: Record<string, string> = {
   teal: 'bg-teal-100 text-teal-800 border-teal-200',
   indigo: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   fuchsia: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
+  cyan: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+  red: 'bg-red-100 text-red-800 border-red-200',
 };
 
 const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'about'];
@@ -143,6 +147,10 @@ export default function App() {
               <DisclosureRenderer doc={parsed as never} />
             ) : detected === 'classroom-aup' ? (
               <ClassroomAupRenderer doc={parsed as never} />
+            ) : detected === 'clinical-ai' ? (
+              <ClinicalAiRenderer doc={parsed as never} />
+            ) : detected === 'ai-incident-card' ? (
+              <IncidentCardRenderer doc={parsed as never} />
             ) : (
               <RawJsonRenderer doc={parsed} />
             )}

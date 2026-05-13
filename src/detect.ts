@@ -14,6 +14,8 @@ export type SpecKey =
   | 'tutor-card'
   | 'student-ai-disclosure'
   | 'classroom-aup'
+  | 'clinical-ai'
+  | 'ai-incident-card'
   | 'unknown';
 
 export interface SpecInfo {
@@ -80,6 +82,20 @@ export const SPECS: Record<Exclude<SpecKey, 'unknown'>, SpecInfo> = {
     versionField: 'aup_version',
     specRepo: 'https://github.com/mizcausevic-dev/classroom-ai-aup-spec',
     accent: 'fuchsia',
+  },
+  'clinical-ai': {
+    key: 'clinical-ai',
+    displayName: 'Clinical AI Disclosure',
+    versionField: 'clinical_ai_card_version',
+    specRepo: 'https://github.com/mizcausevic-dev/clinical-ai-disclosure-spec',
+    accent: 'cyan',
+  },
+  'ai-incident-card': {
+    key: 'ai-incident-card',
+    displayName: 'AI Incident Card',
+    versionField: 'incident_card_version',
+    specRepo: 'https://github.com/mizcausevic-dev/ai-incident-card-spec',
+    accent: 'red',
   },
 };
 
