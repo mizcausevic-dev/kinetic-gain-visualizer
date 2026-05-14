@@ -14,6 +14,7 @@ const accentBadge: Record<ProtocolAccent, string> = {
   fuchsia: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200',
   cyan: 'bg-cyan-50 text-cyan-700 border-cyan-200',
   red: 'bg-red-50 text-red-700 border-red-200',
+  purple: 'bg-purple-50 text-purple-700 border-purple-200',
 };
 
 const accentBorder: Record<ProtocolAccent, string> = {
@@ -27,6 +28,7 @@ const accentBorder: Record<ProtocolAccent, string> = {
   fuchsia: 'border-fuchsia-300',
   cyan: 'border-cyan-300',
   red: 'border-red-300',
+  purple: 'border-purple-300',
 };
 
 const accentLeft: Record<ProtocolAccent, string> = {
@@ -40,6 +42,7 @@ const accentLeft: Record<ProtocolAccent, string> = {
   fuchsia: 'border-l-fuchsia-500',
   cyan: 'border-l-cyan-500',
   red: 'border-l-red-500',
+  purple: 'border-l-purple-500',
 };
 
 const protocolByKey = new Map(PROTOCOLS.map((p) => [p.key, p]));
@@ -290,5 +293,7 @@ function barColor(accent: ProtocolAccent): string {
       return 'bg-cyan-500';
     case 'red':
       return 'bg-red-500';
+    case 'purple':
+      return 'bg-purple-500';
   }
 }

@@ -1,13 +1,14 @@
 /**
- * Canonical data for all ten Kinetic Gain Protocol Suite specs and the
- * 43 tools exposed by mcp-kinetic-gain v0.5.0. Mirrored from
+ * Canonical data for all eleven Kinetic Gain Protocol Suite specs and the
+ * 47 tools exposed by mcp-kinetic-gain v0.5.2. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
- * The ten specs: five core (AEO, Prompt Provenance, Agent Cards, AI Evidence
+ * The eleven specs: five core (AEO, Prompt Provenance, Agent Cards, AI Evidence
  * Format, MCP Tool Cards), the EdTech trio (Tutor / Student / Classroom AUP),
- * the HealthTech extension (Clinical AI Disclosure), and the cross-cutting
- * AI Incident Card.
+ * the HealthTech extension (Clinical AI Disclosure), the cross-cutting
+ * AI Incident Card (vendor-side), and the buyer-side AI Procurement Decision
+ * Card (spec #11).
  */
 import type { SpecKey } from './detect';
 
@@ -24,7 +25,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia' | 'cyan' | 'red';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia' | 'cyan' | 'red' | 'purple';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -138,7 +139,7 @@ export const PROTOCOLS: ProtocolSummary[] = [
   {
     key: 'ai-incident-card',
     displayName: 'AI Incident Card',
-    fullName: 'AI Incident Card v0.1 (cross-cutting)',
+    fullName: 'AI Incident Card v0.1 (cross-cutting · vendor-side)',
     shortBlurb:
       'Vendor-published post-incident disclosure — the "CVE for AI agents". Cross-references every other affected document. Headline tool: incident_index_fetch summarizes a vendor\'s full incident history in one call.',
     versionField: 'incident_card_version',
@@ -146,6 +147,18 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 5,
     specRepo: 'https://github.com/mizcausevic-dev/ai-incident-card-spec',
     accent: 'red',
+  },
+  {
+    key: 'decision-card',
+    displayName: 'AI Procurement Decision Card',
+    fullName: 'AI Procurement Decision Card v0.1 (cross-cutting · buyer-side)',
+    shortBlurb:
+      'The buyer-side artifact. Records the outcome of a procurement review of one or more vendor declarations: documents reviewed (by URL + content hash), rubric, conditions, rationale, signatures. Natural carrier for NIST AI RMF-aligned procurement decisions.',
+    versionField: 'decision_card_version',
+    wellKnownPath: '/.well-known/decisions/<decision_id>.json',
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/ai-procurement-decision-spec',
+    accent: 'purple',
   },
 ];
 
@@ -565,6 +578,44 @@ export const TOOLS: ToolSpec[] = [
     description: 'HEADLINE — fetch a vendor\'s /.well-known/ai-incidents.json index and return a procurement-friendly summary: total count, breakdown by severity, breakdown by status, IDs sorted by disclosed_at descending. The cheapest possible vendor-history scan for CISO / procurement.',
     inputs: [
       { name: 'origin', type: 'string (URL)', required: true, description: 'Vendor origin.' },
+    ],
+  },
+
+  // --------------------------------------------------------------------------
+  // AI Procurement Decision Card — buyer-side, spec #11
+  // --------------------------------------------------------------------------
+  {
+    name: 'decision_card_well_known_url',
+    protocol: 'decision-card',
+    description: 'Compute the canonical AI Procurement Decision Card well-known URL: /.well-known/decisions/<decision_id>.json.',
+    inputs: [
+      { name: 'origin', type: 'string (URL)', required: true, description: 'Buyer origin (e.g. https://springfield.edu).' },
+      { name: 'decision_id', type: 'string', required: true, description: 'Buyer-issued identifier (e.g. SPRINGFIELD-DEC-2026-001).' },
+    ],
+  },
+  {
+    name: 'decision_card_fetch',
+    protocol: 'decision-card',
+    description: 'Fetch an AI Procurement Decision Card from a URL. Returns the parsed, schema-validated JSON document.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: true, description: 'Full URL to the Decision Card JSON.' },
+    ],
+  },
+  {
+    name: 'decision_card_validate',
+    protocol: 'decision-card',
+    description: 'Validate a Decision Card JSON document against the v0.1 schema. Enforces conditional rules: status=approved-with-conditions / rejected-with-remediation require non-empty conditions; status=withdrawn requires withdrawal block; publication.is_public=true requires publication_uri.',
+    inputs: [
+      { name: 'document_json', type: 'string (JSON)', required: true, description: 'Decision Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'decision_card_inspect',
+    protocol: 'decision-card',
+    description: 'Procurement-grade summary of a Decision Card: buyer identity, decision status + scope, vendor + documents reviewed by type, rubric pass/partial/fail counts, conditions count, signatures count, publication posture, history event count, withdrawal flag.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Fetch by URL (or supply document_json).' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Decision Card as inline JSON.' },
     ],
   },
 ];

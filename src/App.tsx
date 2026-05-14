@@ -14,6 +14,7 @@ import { DisclosureRenderer } from './renderers/DisclosureRenderer';
 import { ClassroomAupRenderer } from './renderers/ClassroomAupRenderer';
 import { ClinicalAiRenderer } from './renderers/ClinicalAiRenderer';
 import { IncidentCardRenderer } from './renderers/IncidentCardRenderer';
+import { DecisionCardRenderer } from './renderers/DecisionCardRenderer';
 import { RawJsonRenderer } from './renderers/RawJsonRenderer';
 
 import { ArchitectureView } from './views/Architecture';
@@ -32,6 +33,7 @@ const accentBadge: Record<string, string> = {
   fuchsia: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
   cyan: 'bg-cyan-100 text-cyan-800 border-cyan-200',
   red: 'bg-red-100 text-red-800 border-red-200',
+  purple: 'bg-purple-100 text-purple-800 border-purple-200',
 };
 
 const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'about'];
@@ -151,6 +153,8 @@ export default function App() {
               <ClinicalAiRenderer doc={parsed as never} />
             ) : detected === 'ai-incident-card' ? (
               <IncidentCardRenderer doc={parsed as never} />
+            ) : detected === 'decision-card' ? (
+              <DecisionCardRenderer doc={parsed as never} />
             ) : (
               <RawJsonRenderer doc={parsed} />
             )}

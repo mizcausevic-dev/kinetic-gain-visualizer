@@ -13,6 +13,7 @@ const accentRing: Record<string, string> = {
   fuchsia: 'border-fuchsia-300 hover:border-fuchsia-500',
   cyan: 'border-cyan-300 hover:border-cyan-500',
   red: 'border-red-300 hover:border-red-500',
+  purple: 'border-purple-300 hover:border-purple-500',
 };
 
 const accentDot: Record<string, string> = {
@@ -26,6 +27,7 @@ const accentDot: Record<string, string> = {
   fuchsia: 'bg-fuchsia-500',
   cyan: 'bg-cyan-500',
   red: 'bg-red-500',
+  purple: 'bg-purple-500',
 };
 
 const accentText: Record<string, string> = {
@@ -39,6 +41,7 @@ const accentText: Record<string, string> = {
   fuchsia: 'text-fuchsia-700',
   cyan: 'text-cyan-700',
   red: 'text-red-700',
+  purple: 'text-purple-700',
 };
 
 export function ArchitectureView() {
