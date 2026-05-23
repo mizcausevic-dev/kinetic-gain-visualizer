@@ -25,7 +25,7 @@ export const AEO_EXAMPLE = {
     {
       id: 'current-role',
       predicate: 'jobTitle',
-      value: 'Director of Web Engineering · Platform Architecture · B2B SaaS Technologist',
+      value: 'Boston Enterprise Technologist · Platform Architecture · B2B SaaS Technologist',
       confidence: 'high',
     },
     {
