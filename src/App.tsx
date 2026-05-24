@@ -203,7 +203,7 @@ export default function App() {
 
       <footer className="border-t border-slate-800 bg-slate-900/60 py-6">
         <div className="max-w-7xl mx-auto px-4 text-xs text-slate-500 flex flex-wrap items-center gap-3">
-          <span>Built for the <strong className="text-slate-300">Kinetic Gain Protocol Suite</strong>.</span>
+          <span>Built for the <a className="hover:text-white" href="https://suite.kineticgain.com" target="_blank" rel="noreferrer"><strong className="text-slate-300">Kinetic Gain Protocol Suite</strong></a>.</span>
           <span>·</span>
           <a className="hover:text-white" href="https://www.linkedin.com/in/mirzacausevic/" target="_blank" rel="noreferrer">LinkedIn</a>
           <a className="hover:text-white" href="https://kineticgain.com" target="_blank" rel="noreferrer">Kinetic Gain</a>
