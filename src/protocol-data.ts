@@ -1,6 +1,6 @@
 /**
  * Canonical data for all eleven Kinetic Gain Protocol Suite specs and the
- * 47 tools exposed by mcp-kinetic-gain v0.5.2. Mirrored from
+ * 47 spec tools exposed by mcp-kinetic-gain v0.7.1. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *

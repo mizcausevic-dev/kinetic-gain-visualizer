@@ -81,12 +81,12 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
       {/* Withdrawal banner (if applicable) */}
       {isWithdrawn && doc.withdrawal && (
         <Card title="🚫 INCIDENT WITHDRAWN" subtitle={`withdrawn at ${doc.withdrawal.withdrawn_at}`} tone="warning">
-          <Field label="Reason" value={<em className="text-amber-900">{doc.withdrawal.reason}</em>} />
+          <Field label="Reason" value={<em className="text-amber-200">{doc.withdrawal.reason}</em>} />
           {doc.withdrawal.replacement_incident_uri && (
             <Field
               label="Replaced by"
               value={
-                <a href={doc.withdrawal.replacement_incident_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code break-all">
+                <a href={doc.withdrawal.replacement_incident_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code break-all">
                   ↗ {doc.withdrawal.replacement_incident_uri}
                 </a>
               }
@@ -124,7 +124,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
         <Field
           label="Timeline"
           value={
-            <div className="text-xs space-y-0.5 code text-slate-700">
+            <div className="text-xs space-y-0.5 code text-slate-300">
               <div>occurred:   {inc.occurred_at ?? '—'}</div>
               <div>discovered: {inc.discovered_at}</div>
               <div>disclosed:  {inc.disclosed_at}</div>
@@ -136,7 +136,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
 
       {/* Summary */}
       <Card title="Summary" subtitle="What happened, plain English">
-        <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{doc.summary}</p>
+        <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">{doc.summary}</p>
       </Card>
 
       {/* Affected */}
@@ -158,7 +158,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
             value={
               <div className="flex flex-wrap gap-1.5">
                 {doc.affected.versions.map((v) => (
-                  <code key={v} className="code text-xs px-2 py-0.5 bg-slate-100 rounded">{v}</code>
+                  <code key={v} className="code text-xs px-2 py-0.5 bg-slate-800 rounded">{v}</code>
                 ))}
               </div>
             }
@@ -168,7 +168,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
           <Field
             label="Users affected"
             value={
-              <span className="code text-sm text-slate-800">
+              <span className="code text-sm text-slate-200">
                 {doc.affected.affected_user_count.kind}
                 {doc.affected.affected_user_count.count !== undefined && (
                   <> · {doc.affected.affected_user_count.count.toLocaleString()}</>
@@ -202,7 +202,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
                 <ul className="space-y-0.5">
                   {doc.affected.agent_card_uris.map((u) => (
                     <li key={u}>
-                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">↗ {u}</a>
+                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">↗ {u}</a>
                     </li>
                   ))}
                 </ul>
@@ -216,7 +216,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
                 <ul className="space-y-0.5">
                   {doc.affected.tutor_card_uris.map((u) => (
                     <li key={u}>
-                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">↗ {u}</a>
+                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">↗ {u}</a>
                     </li>
                   ))}
                 </ul>
@@ -230,7 +230,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
                 <ul className="space-y-0.5">
                   {doc.affected.tool_card_uris.map((u) => (
                     <li key={u}>
-                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">↗ {u}</a>
+                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">↗ {u}</a>
                     </li>
                   ))}
                 </ul>
@@ -246,7 +246,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
         {doc.root_cause.category_other_text && (
           <Field label="Other category" value={<em>{doc.root_cause.category_other_text}</em>} />
         )}
-        <Field label="Description" value={<p className="text-sm text-slate-700 leading-relaxed">{doc.root_cause.description}</p>} />
+        <Field label="Description" value={<p className="text-sm text-slate-300 leading-relaxed">{doc.root_cause.description}</p>} />
       </Card>
 
       {/* Harm */}
@@ -257,9 +257,9 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
         />
         <Field
           label="Severity justification"
-          value={<em className="text-sm text-slate-700">{doc.harm.severity_justification}</em>}
+          value={<em className="text-sm text-slate-300">{doc.harm.severity_justification}</em>}
         />
-        {doc.harm.narrative && <Field label="Narrative" value={<p className="text-sm text-slate-700 leading-relaxed">{doc.harm.narrative}</p>} />}
+        {doc.harm.narrative && <Field label="Narrative" value={<p className="text-sm text-slate-300 leading-relaxed">{doc.harm.narrative}</p>} />}
       </Card>
 
       {/* Mitigation */}
@@ -275,7 +275,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
         <Field
           label="Actions taken"
           value={
-            <ol className="space-y-1 text-sm text-slate-700 list-decimal list-inside">
+            <ol className="space-y-1 text-sm text-slate-300 list-decimal list-inside">
               {doc.mitigation.actions_taken.map((a, i) => (
                 <li key={i}>{a}</li>
               ))}
@@ -283,7 +283,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
           }
         />
         {doc.mitigation.workaround_for_users && (
-          <Field label="Workaround" value={<em className="text-sm text-slate-700">{doc.mitigation.workaround_for_users}</em>} />
+          <Field label="Workaround" value={<em className="text-sm text-slate-300">{doc.mitigation.workaround_for_users}</em>} />
         )}
       </Card>
 
@@ -341,7 +341,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
                 <ul className="space-y-0.5">
                   {doc.evidence.evidence_uris.map((u) => (
                     <li key={u}>
-                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">↗ {u}</a>
+                      <a href={u} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">↗ {u}</a>
                     </li>
                   ))}
                 </ul>
@@ -352,7 +352,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
             <Field
               label="Prompt Provenance"
               value={
-                <a href={doc.evidence.prompt_provenance_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">
+                <a href={doc.evidence.prompt_provenance_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">
                   ↗ {doc.evidence.prompt_provenance_uri}
                 </a>
               }
@@ -363,7 +363,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
             <Field
               label="Reproduction"
               value={
-                <a href={doc.evidence.reproduction_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">
+                <a href={doc.evidence.reproduction_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">
                   ↗ {doc.evidence.reproduction_uri}
                 </a>
               }
@@ -374,7 +374,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
             <Field
               label="Internal postmortem"
               value={
-                <a href={doc.evidence.internal_postmortem_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code text-xs break-all">
+                <a href={doc.evidence.internal_postmortem_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code text-xs break-all">
                   ↗ {doc.evidence.internal_postmortem_uri}
                 </a>
               }
@@ -391,7 +391,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
             {doc.references.map((r, i) => (
               <li key={i} className="text-sm">
                 <Pill tone="slate">{r.type}</Pill>{' '}
-                <a href={r.uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                <a href={r.uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">
                   {r.title}
                 </a>
                 {r.published_at && <span className="text-xs text-slate-500"> · {r.published_at}</span>}
@@ -409,7 +409,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
           <Field
             label="Contact"
             value={
-              <a href={doc.published_by.contact_uri} className="text-blue-600 hover:underline code break-all">
+              <a href={doc.published_by.contact_uri} className="text-blue-400 hover:underline code break-all">
                 {doc.published_by.contact_uri}
               </a>
             }
@@ -422,7 +422,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
           <Field
             label="Revision"
             value={
-              <span className="text-sm text-slate-700">
+              <span className="text-sm text-slate-300">
                 <code className="code">#{doc.revision.number}</code> · {doc.revision.change_summary}
               </span>
             }

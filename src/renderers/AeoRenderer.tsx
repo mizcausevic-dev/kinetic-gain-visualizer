@@ -20,8 +20,8 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
           {doc.entity.aliases && (
             <p className="text-sm text-slate-500 italic mt-1">aka {doc.entity.aliases.join(', ')}</p>
           )}
-          <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-            <Field label="Canonical" value={<a className="text-blue-600 hover:underline code" href={doc.entity.canonical_url} target="_blank" rel="noreferrer">{doc.entity.canonical_url}</a>} />
+          <div className="mt-4 pt-4 border-t border-slate-800 space-y-2">
+            <Field label="Canonical" value={<a className="text-blue-400 hover:underline code" href={doc.entity.canonical_url} target="_blank" rel="noreferrer">{doc.entity.canonical_url}</a>} />
             <Field label="ID" value={doc.entity.id} mono />
           </div>
         </Card>
@@ -54,7 +54,7 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
           <Card title="Answer constraints" subtitle="Soft constraints for synthesis" tone="warning">
             {doc.answer_constraints.must_not_include && (
               <div>
-                <div className="text-[10px] uppercase tracking-widest text-amber-700 mb-2">Exclude</div>
+                <div className="text-[10px] uppercase tracking-widest text-amber-300 mb-2">Exclude</div>
                 <div className="flex flex-wrap gap-2">
                   {doc.answer_constraints.must_not_include.map((c) => <Pill key={c} tone="amber">{c}</Pill>)}
                 </div>
@@ -62,8 +62,8 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
             )}
             {doc.answer_constraints.freshness_window_days && (
               <div className="mt-3">
-                <div className="text-[10px] uppercase tracking-widest text-amber-700">Freshness window</div>
-                <div className="text-sm font-semibold text-amber-900">{doc.answer_constraints.freshness_window_days} days</div>
+                <div className="text-[10px] uppercase tracking-widest text-amber-300">Freshness window</div>
+                <div className="text-sm font-semibold text-amber-200">{doc.answer_constraints.freshness_window_days} days</div>
               </div>
             )}
           </Card>
@@ -74,18 +74,18 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
         <Card title="Authoritative claims" subtitle={`${doc.claims.length} machine-readable facts`}>
           <div className="space-y-3">
             {doc.claims.map((c) => (
-              <div key={c.id} className="border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+              <div key={c.id} className="border border-slate-800 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition-all">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] uppercase tracking-widest text-slate-500 code">{c.predicate}</span>
                   {c.confidence === 'high' && <Pill tone="green">high confidence</Pill>}
                   {c.confidence === 'medium' && <Pill tone="amber">medium confidence</Pill>}
                   {c.confidence === 'low' && <Pill tone="red">low confidence</Pill>}
                 </div>
-                <div className="text-base font-semibold text-slate-800 break-words">
+                <div className="text-base font-semibold text-slate-200 break-words">
                   <ValueRender value={c.value} />
                 </div>
                 {c.evidence && c.evidence.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-slate-100">
+                  <div className="mt-3 pt-3 border-t border-slate-800">
                     <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">Evidence</div>
                     <LinkList items={c.evidence} />
                   </div>
@@ -95,10 +95,10 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
           </div>
 
           {doc.citation_preferences && (
-            <div className="mt-6 pt-6 border-t border-slate-100">
-              <h4 className="text-sm font-semibold text-slate-700 mb-2">Citation preferences</h4>
+            <div className="mt-6 pt-6 border-t border-slate-800">
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">Citation preferences</h4>
               {doc.citation_preferences.preferred_attribution && (
-                <blockquote className="italic text-slate-700 border-l-2 border-blue-300 pl-3 text-sm">
+                <blockquote className="italic text-slate-300 border-l-2 border-blue-300 pl-3 text-sm">
                   &ldquo;{doc.citation_preferences.preferred_attribution}&rdquo;
                 </blockquote>
               )}
@@ -112,7 +112,7 @@ export function AeoRenderer({ doc }: { doc: Doc }) {
           )}
 
           {doc.audit && (
-            <div className="mt-6 pt-6 border-t border-slate-100 flex items-center gap-3">
+            <div className="mt-6 pt-6 border-t border-slate-800 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-widest text-slate-400">Audit mode</span>
               <Pill tone={doc.audit.mode === 'signature' ? 'violet' : doc.audit.mode === 'endpoint' ? 'blue' : 'slate'}>
                 {doc.audit.mode}

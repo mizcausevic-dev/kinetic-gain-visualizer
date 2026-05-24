@@ -88,10 +88,10 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
           </div>
           <h2 className="text-3xl font-bold tracking-tight">{doc.tutor.name}</h2>
           <p className="text-sm text-slate-500 code mt-1">{doc.tutor.id}</p>
-          <p className="text-slate-700 mt-3 leading-relaxed">{doc.tutor.description}</p>
+          <p className="text-slate-300 mt-3 leading-relaxed">{doc.tutor.description}</p>
 
           {!compliance.pass && (
-            <div className="mt-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-800">
+            <div className="mt-4 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30 text-sm text-red-300">
               <strong>Compliance flag:</strong> {compliance.message}
             </div>
           )}
@@ -182,7 +182,7 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
           {(doc.pedagogy.supports_visual_explanations ||
             doc.pedagogy.supports_step_by_step_breakdown ||
             doc.pedagogy.supports_alternative_explanations) && (
-            <div className="mt-3 pt-3 border-t border-slate-100">
+            <div className="mt-3 pt-3 border-t border-slate-800">
               <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-2 code">Behavioral features</div>
               <div className="flex flex-wrap gap-1.5">
                 {doc.pedagogy.supports_visual_explanations && <Pill tone="green">visual explanations</Pill>}
@@ -218,7 +218,7 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
               }
             />
           )}
-          <div className="mt-3 pt-3 border-t border-amber-200 grid grid-cols-2 gap-2 text-xs">
+          <div className="mt-3 pt-3 border-t border-amber-500/30 grid grid-cols-2 gap-2 text-xs">
             {doc.safety.blocks_explicit_content !== undefined && (
               <span>
                 Explicit: <Pill tone={doc.safety.blocks_explicit_content ? 'green' : 'red'}>{doc.safety.blocks_explicit_content ? 'blocked' : 'allowed'}</Pill>
@@ -273,10 +273,10 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
             <ul className="space-y-2">
               {doc.curriculum_alignment.map((f) => (
                 <li key={f.framework} className="text-sm">
-                  <div className="font-medium text-slate-800">{f.framework}</div>
+                  <div className="font-medium text-slate-200">{f.framework}</div>
                   {f.version && <div className="text-xs text-slate-500 code">v{f.version}</div>}
                   {f.coverage_uri && (
-                    <a className="text-xs text-blue-600 hover:underline code" href={f.coverage_uri} target="_blank" rel="noreferrer">
+                    <a className="text-xs text-blue-400 hover:underline code" href={f.coverage_uri} target="_blank" rel="noreferrer">
                       coverage map ↗
                     </a>
                   )}
@@ -291,7 +291,7 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
             <Field
               label="Agent card"
               value={
-                <a className="text-blue-600 hover:underline code text-xs break-all" href={doc.agent_card_uri} target="_blank" rel="noreferrer">
+                <a className="text-blue-400 hover:underline code text-xs break-all" href={doc.agent_card_uri} target="_blank" rel="noreferrer">
                   {doc.agent_card_uri}
                 </a>
               }
@@ -304,7 +304,7 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
             <ul className="space-y-1.5">
               {doc.evaluations.map((e) => (
                 <li key={e.suite} className="text-sm">
-                  <div className="font-medium text-slate-800">{e.suite}</div>
+                  <div className="font-medium text-slate-200">{e.suite}</div>
                   <div className="text-xs text-slate-500 code">{e.ran_at}</div>
                 </li>
               ))}
@@ -319,7 +319,7 @@ export function TutorCardRenderer({ doc }: { doc: Doc }) {
 function ComplianceBadge({ label, passing }: { label: string; passing: boolean }) {
   return (
     <div
-      className={`rounded-lg p-3 text-center ${passing ? 'bg-emerald-500/20 border border-emerald-500/40' : 'bg-red-500/20 border border-red-500/40'}`}
+      className={`rounded-lg p-3 text-center ${passing ? 'bg-emerald-500/100/20 border border-emerald-500/40' : 'bg-red-500/100/20 border border-red-500/40'}`}
     >
       <div className="text-[9px] uppercase tracking-widest text-slate-400 code mb-1">{label}</div>
       <div className={`text-lg font-bold ${passing ? 'text-emerald-300' : 'text-red-300'}`}>

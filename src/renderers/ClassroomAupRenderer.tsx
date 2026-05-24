@@ -122,7 +122,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                 href={doc.scope.parent_policy_uri}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-600 hover:underline code break-all"
+                className="text-blue-400 hover:underline code break-all"
               >
                 ↗ {doc.scope.parent_policy_uri}
               </a>
@@ -135,7 +135,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
       {/* Proctored no-AI warning banner */}
       {isProctoredNoAI && (
         <Card title="🚫 No AI use permitted" subtitle="assistance_extent_max=none" tone="warning">
-          <p className="text-sm text-amber-900">
+          <p className="text-sm text-amber-200">
             This policy declares zero permitted AI use. Any submission with{' '}
             <code className="code">ai_used=true</code> will fail compliance check.
           </p>
@@ -164,7 +164,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
             value={
               <div className="flex flex-wrap gap-1.5">
                 {doc.scope.course_ids.map((c) => (
-                  <code key={c} className="code text-xs px-2 py-0.5 bg-slate-100 rounded">
+                  <code key={c} className="code text-xs px-2 py-0.5 bg-slate-800 rounded">
                     {c}
                   </code>
                 ))}
@@ -178,7 +178,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
             value={
               <div className="flex flex-wrap gap-1.5">
                 {doc.scope.assignment_ids.map((a) => (
-                  <code key={a} className="code text-xs px-2 py-0.5 bg-slate-100 rounded">
+                  <code key={a} className="code text-xs px-2 py-0.5 bg-slate-800 rounded">
                     {a}
                   </code>
                 ))}
@@ -202,7 +202,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
           label="Permitted roles"
           value={
             doc.permitted_use.permitted_roles.length === 0 ? (
-              <span className="text-red-700 italic text-sm">none — zero AI use permitted</span>
+              <span className="text-red-300 italic text-sm">none — zero AI use permitted</span>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {doc.permitted_use.permitted_roles.map((r) => (
@@ -236,16 +236,16 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                 {doc.permitted_use.permitted_tools.map((t, i) => (
                   <div
                     key={i}
-                    className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs"
+                    className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-xs"
                   >
-                    <div className="font-semibold text-slate-900">{t.name}</div>
-                    {t.notes && <div className="text-slate-600 italic mt-0.5">{t.notes}</div>}
+                    <div className="font-semibold text-white">{t.name}</div>
+                    {t.notes && <div className="text-slate-400 italic mt-0.5">{t.notes}</div>}
                     {t.tutor_card_uri && (
                       <a
                         href={t.tutor_card_uri}
                         target="_blank"
                         rel="noreferrer"
-                        className="block text-blue-600 hover:underline code break-all mt-1"
+                        className="block text-blue-400 hover:underline code break-all mt-1"
                       >
                         ↗ Tutor Card · {t.tutor_card_uri}
                       </a>
@@ -255,7 +255,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                         href={t.agent_card_uri}
                         target="_blank"
                         rel="noreferrer"
-                        className="block text-blue-600 hover:underline code break-all mt-1"
+                        className="block text-blue-400 hover:underline code break-all mt-1"
                       >
                         ↗ Agent Card · {t.agent_card_uri}
                       </a>
@@ -293,10 +293,10 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                 <Field
                   label="Prohibitions"
                   value={
-                    <ul className="space-y-1 text-sm text-slate-700">
+                    <ul className="space-y-1 text-sm text-slate-300">
                       {doc.prohibited_use.prohibited_uses.map((u, i) => (
                         <li key={i} className="flex gap-2">
-                          <span className="text-red-600">✕</span>
+                          <span className="text-red-400">✕</span>
                           <span>{u}</span>
                         </li>
                       ))}
@@ -498,7 +498,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
       {/* Enforcement */}
       {doc.enforcement && doc.enforcement.violation_response && (
         <Card title="Enforcement" subtitle="What happens on violation">
-          <ol className="space-y-1 text-sm text-slate-700 list-decimal list-inside">
+          <ol className="space-y-1 text-sm text-slate-300 list-decimal list-inside">
             {doc.enforcement.violation_response.map((r, i) => (
               <li key={i}>{r}</li>
             ))}
@@ -512,7 +512,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                     href={doc.enforcement.appeals_process_uri}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-blue-600 hover:underline code break-all"
+                    className="text-blue-400 hover:underline code break-all"
                   >
                     {doc.enforcement.appeals_process_uri}
                   </a>
@@ -534,7 +534,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
             value={
               <a
                 href={doc.published_by.contact_uri}
-                className="text-blue-600 hover:underline code break-all"
+                className="text-blue-400 hover:underline code break-all"
               >
                 {doc.published_by.contact_uri}
               </a>
@@ -551,7 +551,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
                 href={doc.audit_log_uri}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-600 hover:underline code break-all"
+                className="text-blue-400 hover:underline code break-all"
               >
                 ↗ {doc.audit_log_uri}
               </a>

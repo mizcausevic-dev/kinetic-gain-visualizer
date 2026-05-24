@@ -27,9 +27,9 @@ export function PromptProvenanceRenderer({ doc }: { doc: Doc }) {
           <Pill tone="green">{doc.prompt.content_type}</Pill>
           <h2 className="text-3xl font-bold tracking-tight mt-2">{doc.prompt.name}</h2>
           <p className="text-sm text-slate-500 code mt-1">{doc.prompt.id}@{doc.prompt.version}</p>
-          <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+          <div className="mt-4 pt-4 border-t border-slate-800 space-y-2">
             <Field label="Hash" value={doc.prompt.hash} mono />
-            <Field label="Content" value={<a className="text-blue-600 hover:underline code" href={doc.prompt.content_uri} target="_blank" rel="noreferrer">{doc.prompt.content_uri}</a>} />
+            <Field label="Content" value={<a className="text-blue-400 hover:underline code" href={doc.prompt.content_uri} target="_blank" rel="noreferrer">{doc.prompt.content_uri}</a>} />
             {doc.approval && (
               <Field
                 label="Approval"
@@ -43,7 +43,7 @@ export function PromptProvenanceRenderer({ doc }: { doc: Doc }) {
 
         {doc.intent && (
           <Card title="Intent" subtitle="What the prompt is for">
-            {doc.intent.purpose && <p className="text-slate-700 mb-3">{doc.intent.purpose}</p>}
+            {doc.intent.purpose && <p className="text-slate-300 mb-3">{doc.intent.purpose}</p>}
             {doc.intent.models_supported && (
               <div className="mt-2">
                 <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Models supported</div>
@@ -59,14 +59,14 @@ export function PromptProvenanceRenderer({ doc }: { doc: Doc }) {
           <Card title="Evaluations" subtitle="Gate criteria for production">
             <div className="space-y-2">
               {doc.evaluations.map((ev) => (
-                <div key={ev.suite + ev.ran_at} className="flex items-center justify-between gap-4 border-b border-slate-100 last:border-0 py-2">
+                <div key={ev.suite + ev.ran_at} className="flex items-center justify-between gap-4 border-b border-slate-800 last:border-0 py-2">
                   <div>
                     <div className="text-sm font-medium">{ev.suite}</div>
-                    <a className="text-xs text-blue-600 code hover:underline" href={ev.result_uri} target="_blank" rel="noreferrer">{ev.result_uri}</a>
+                    <a className="text-xs text-blue-400 code hover:underline" href={ev.result_uri} target="_blank" rel="noreferrer">{ev.result_uri}</a>
                   </div>
                   <div className="flex items-center gap-3">
                     {typeof ev.score === 'number' && (
-                      <span className="text-sm font-semibold code text-slate-700">{ev.score.toFixed(2)}</span>
+                      <span className="text-sm font-semibold code text-slate-300">{ev.score.toFixed(2)}</span>
                     )}
                     <Pill tone={ev.passed ? 'green' : 'red'}>{ev.passed ? 'passed' : 'failed'}</Pill>
                   </div>

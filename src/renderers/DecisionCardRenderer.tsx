@@ -184,10 +184,10 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
       {isWithdrawn && doc.withdrawal && (
         <Card tone="warning">
           <div className="text-sm">
-            <span className="font-bold text-amber-900">DECISION WITHDRAWN</span>
-            <span className="text-amber-800"> on {doc.withdrawal.at} — {doc.withdrawal.reason}</span>
+            <span className="font-bold text-amber-200">DECISION WITHDRAWN</span>
+            <span className="text-amber-300"> on {doc.withdrawal.at} — {doc.withdrawal.reason}</span>
             {doc.withdrawal.replaces && (
-              <span className="text-amber-800"> · replaced by <code className="code">{doc.withdrawal.replaces}</code></span>
+              <span className="text-amber-300"> · replaced by <code className="code">{doc.withdrawal.replaces}</code></span>
             )}
           </div>
         </Card>
@@ -200,7 +200,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
           {dec.scope && <Pill tone="slate">{dec.scope}</Pill>}
         </div>
         <Field label="Buyer" value={<span><span className="font-semibold">{doc.buyer.name}</span> <span className="text-slate-500">· {doc.buyer.type}{doc.buyer.jurisdiction ? ' · ' + doc.buyer.jurisdiction : ''}</span></span>} />
-        <Field label="Vendor / Product" value={<span><span className="font-semibold">{doc.subject.vendor_name}</span>{doc.subject.product_name && <span className="text-slate-700"> · {doc.subject.product_name}</span>}</span>} />
+        <Field label="Vendor / Product" value={<span><span className="font-semibold">{doc.subject.vendor_name}</span>{doc.subject.product_name && <span className="text-slate-300"> · {doc.subject.product_name}</span>}</span>} />
         <Field label="Issued" value={<span className="code">{doc.issued_at}</span>} />
         {dec.effective_from && <Field label="Effective from" value={<span className="code">{dec.effective_from}</span>} />}
         {dec.effective_until && <Field label="Effective until" value={<span className="code">{dec.effective_until}</span>} />}
@@ -212,7 +212,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
         {doc.buyer.url && (
           <Field
             label="Buyer URL"
-            value={<a className="text-blue-600 hover:underline code break-all" href={doc.buyer.url} target="_blank" rel="noreferrer">{doc.buyer.url}</a>}
+            value={<a className="text-blue-400 hover:underline code break-all" href={doc.buyer.url} target="_blank" rel="noreferrer">{doc.buyer.url}</a>}
           />
         )}
         {doc.buyer.contact && <Field label="Contact" value={<span className="code">{doc.buyer.contact}</span>} />}
@@ -221,7 +221,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
             <Field label="Decision-maker role" value={<span className="font-semibold">{doc.decision_maker.role}</span>} />
             {doc.decision_maker.name && <Field label="Name" value={doc.decision_maker.name} />}
             {doc.decision_maker.department && <Field label="Department" value={doc.decision_maker.department} />}
-            {doc.decision_maker.authority && <Field label="Authority" value={<span className="italic text-slate-700">{doc.decision_maker.authority}</span>} />}
+            {doc.decision_maker.authority && <Field label="Authority" value={<span className="italic text-slate-300">{doc.decision_maker.authority}</span>} />}
           </>
         )}
       </Card>
@@ -233,7 +233,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
         {doc.subject.vendor_id && (
           <Field
             label="Vendor ID"
-            value={<a className="text-blue-600 hover:underline code break-all" href={doc.subject.vendor_id} target="_blank" rel="noreferrer">{doc.subject.vendor_id}</a>}
+            value={<a className="text-blue-400 hover:underline code break-all" href={doc.subject.vendor_id} target="_blank" rel="noreferrer">{doc.subject.vendor_id}</a>}
           />
         )}
         {doc.subject.documents_reviewed && doc.subject.documents_reviewed.length > 0 && (
@@ -241,9 +241,9 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
             <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">
               Documents reviewed ({doc.subject.documents_reviewed.length})
             </div>
-            <div className="overflow-x-auto rounded-lg border border-slate-200">
+            <div className="overflow-x-auto rounded-lg border border-slate-800">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider">
+                <thead className="bg-slate-950 text-slate-400 text-xs uppercase tracking-wider">
                   <tr>
                     <th className="text-left px-3 py-2">Spec</th>
                     <th className="text-left px-3 py-2">URL</th>
@@ -255,8 +255,8 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
                   {doc.subject.documents_reviewed.map((d, i) => (
                     <tr key={i}>
                       <td className="px-3 py-2"><Pill tone="blue">{d.type}</Pill></td>
-                      <td className="px-3 py-2"><a className="text-blue-600 hover:underline code break-all" href={d.url} target="_blank" rel="noreferrer">{d.url}</a></td>
-                      <td className="px-3 py-2 code text-slate-700">{d.version ?? '—'}</td>
+                      <td className="px-3 py-2"><a className="text-blue-400 hover:underline code break-all" href={d.url} target="_blank" rel="noreferrer">{d.url}</a></td>
+                      <td className="px-3 py-2 code text-slate-300">{d.version ?? '—'}</td>
                       <td className="px-3 py-2 code text-slate-500" title={d.content_hash}>{shortHash(d.content_hash)}</td>
                     </tr>
                   ))}
@@ -278,7 +278,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
               <ul className="space-y-1">
                 {doc.criteria.policy_uris.map((u) => (
                   <li key={u}>
-                    <a className="text-blue-600 hover:underline code text-sm break-all" href={u} target="_blank" rel="noreferrer">{u}</a>
+                    <a className="text-blue-400 hover:underline code text-sm break-all" href={u} target="_blank" rel="noreferrer">{u}</a>
                   </li>
                 ))}
               </ul>
@@ -297,14 +297,14 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
               {/* Per-criterion list */}
               <ul className="space-y-2">
                 {doc.criteria.rubric.map((r) => (
-                  <li key={r.id} className="border border-slate-200 rounded-lg p-3 bg-slate-50">
+                  <li key={r.id} className="border border-slate-800 rounded-lg p-3 bg-slate-950">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <code className="code text-sm font-semibold text-slate-800">{r.id}</code>
+                      <code className="code text-sm font-semibold text-slate-200">{r.id}</code>
                       <Pill tone={rubricTone(r.result)}>{r.result}</Pill>
                       {typeof r.weight === 'number' && <span className="text-xs text-slate-500">weight {r.weight}</span>}
                     </div>
-                    {r.description && <p className="text-sm text-slate-700 mb-1">{r.description}</p>}
-                    {r.notes && <p className="text-xs italic text-slate-600">{r.notes}</p>}
+                    {r.description && <p className="text-sm text-slate-300 mb-1">{r.description}</p>}
+                    {r.notes && <p className="text-xs italic text-slate-400">{r.notes}</p>}
                   </li>
                 ))}
               </ul>
@@ -327,16 +327,16 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
                   <code className="code text-sm font-semibold">{c.id}</code>
                   {c.enforcement && <Pill tone={enforcementTone(c.enforcement)}>{c.enforcement}</Pill>}
                 </div>
-                <p className="text-sm text-slate-800 mb-1">{c.description}</p>
+                <p className="text-sm text-slate-200 mb-1">{c.description}</p>
                 {c.violation_response && (
-                  <p className="text-xs text-slate-600 mb-1">
+                  <p className="text-xs text-slate-400 mb-1">
                     <span className="font-semibold uppercase tracking-wider text-slate-500">Violation response:</span> {c.violation_response}
                   </p>
                 )}
                 {c.verification_uri && (
                   <p className="text-xs">
                     <span className="text-slate-500">Verify at: </span>
-                    <a className="text-blue-600 hover:underline code break-all" href={c.verification_uri} target="_blank" rel="noreferrer">{c.verification_uri}</a>
+                    <a className="text-blue-400 hover:underline code break-all" href={c.verification_uri} target="_blank" rel="noreferrer">{c.verification_uri}</a>
                   </p>
                 )}
               </li>
@@ -347,7 +347,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
 
       {/* Rationale */}
       <Card title="Rationale" subtitle="Narrative explanation of the decision">
-        <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line">{doc.rationale}</p>
+        <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">{doc.rationale}</p>
       </Card>
 
       {/* History timeline */}
@@ -362,7 +362,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
                     <Pill tone="slate">{h.event.replace(/_/g, ' ')}</Pill>
                     {h.actor && <span className="text-xs text-slate-500">by {h.actor}</span>}
                   </div>
-                  {h.note && <p className="text-xs italic text-slate-600 mt-1">{h.note}</p>}
+                  {h.note && <p className="text-xs italic text-slate-400 mt-1">{h.note}</p>}
                 </div>
               </li>
             ))}
@@ -379,7 +379,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
               {doc.appeals.process_uri && (
                 <Field
                   label="Appeals process"
-                  value={<a className="text-blue-600 hover:underline code break-all" href={doc.appeals.process_uri} target="_blank" rel="noreferrer">{doc.appeals.process_uri}</a>}
+                  value={<a className="text-blue-400 hover:underline code break-all" href={doc.appeals.process_uri} target="_blank" rel="noreferrer">{doc.appeals.process_uri}</a>}
                 />
               )}
               {doc.appeals.contact && <Field label="Appeals contact" value={<span className="code">{doc.appeals.contact}</span>} />}
@@ -394,10 +394,10 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
               {doc.publication.publication_uri && (
                 <Field
                   label="Publication URI"
-                  value={<a className="text-blue-600 hover:underline code break-all" href={doc.publication.publication_uri} target="_blank" rel="noreferrer">{doc.publication.publication_uri}</a>}
+                  value={<a className="text-blue-400 hover:underline code break-all" href={doc.publication.publication_uri} target="_blank" rel="noreferrer">{doc.publication.publication_uri}</a>}
                 />
               )}
-              {doc.publication.visibility_notes && <Field label="Visibility notes" value={<span className="italic text-slate-700">{doc.publication.visibility_notes}</span>} />}
+              {doc.publication.visibility_notes && <Field label="Visibility notes" value={<span className="italic text-slate-300">{doc.publication.visibility_notes}</span>} />}
             </>
           )}
         </Card>

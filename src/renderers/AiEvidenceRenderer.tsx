@@ -38,7 +38,7 @@ export function AiEvidenceRenderer({ doc }: { doc: Doc }) {
             <span className="text-xs text-slate-500 code">{doc.evidence_id}</span>
           </div>
           <h2 className="text-xl font-semibold tracking-tight mb-3">Claim</h2>
-          <blockquote className="text-slate-700 border-l-2 border-amber-400 pl-4 italic text-base leading-relaxed">
+          <blockquote className="text-slate-300 border-l-2 border-amber-400 pl-4 italic text-base leading-relaxed">
             &ldquo;{doc.claim_text}&rdquo;
           </blockquote>
         </Card>
@@ -48,7 +48,7 @@ export function AiEvidenceRenderer({ doc }: { doc: Doc }) {
           {doc.span.exact_text && (
             <div className="mt-3">
               <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Exact text</div>
-              <pre className="text-xs code bg-slate-50 rounded p-3 border border-slate-200 overflow-x-auto whitespace-pre-wrap">{doc.span.exact_text}</pre>
+              <pre className="text-xs code bg-slate-950 rounded p-3 border border-slate-800 overflow-x-auto whitespace-pre-wrap">{doc.span.exact_text}</pre>
             </div>
           )}
           {doc.span.surrounding_context && (
@@ -57,7 +57,7 @@ export function AiEvidenceRenderer({ doc }: { doc: Doc }) {
         </Card>
 
         <Card title="Source">
-          <Field label="URI" value={<a className="text-blue-600 hover:underline code" href={doc.source.uri} target="_blank" rel="noreferrer">{doc.source.uri}</a>} />
+          <Field label="URI" value={<a className="text-blue-400 hover:underline code" href={doc.source.uri} target="_blank" rel="noreferrer">{doc.source.uri}</a>} />
           <Field label="Type" value={<Pill>{doc.source.type}</Pill>} />
           {doc.source.title && <Field label="Title" value={doc.source.title} />}
           {doc.source.publisher && <Field label="Publisher" value={doc.source.publisher} />}
@@ -75,9 +75,9 @@ export function AiEvidenceRenderer({ doc }: { doc: Doc }) {
               value={
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 rounded bg-slate-200 overflow-hidden">
-                    <div className="h-full bg-emerald-500" style={{ width: `${(doc.retrieval.confidence * 100).toFixed(0)}%` }} />
+                    <div className="h-full bg-emerald-500/100" style={{ width: `${(doc.retrieval.confidence * 100).toFixed(0)}%` }} />
                   </div>
-                  <span className="text-sm code text-slate-700">{(doc.retrieval.confidence * 100).toFixed(0)}%</span>
+                  <span className="text-sm code text-slate-300">{(doc.retrieval.confidence * 100).toFixed(0)}%</span>
                 </div>
               }
             />
@@ -105,7 +105,7 @@ export function AiEvidenceRenderer({ doc }: { doc: Doc }) {
 
         {doc.notes && (
           <Card title="Notes" tone="warning">
-            <p className="text-sm text-amber-900">{doc.notes}</p>
+            <p className="text-sm text-amber-200">{doc.notes}</p>
           </Card>
         )}
       </div>

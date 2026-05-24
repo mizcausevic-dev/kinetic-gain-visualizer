@@ -51,19 +51,19 @@ export function McpToolCardRenderer({ doc }: { doc: Doc }) {
           </div>
           <h2 className="text-3xl font-bold tracking-tight code">{doc.tool.name}</h2>
           <p className="text-sm text-slate-500 mt-1">v{doc.tool.version}</p>
-          <p className="text-slate-700 mt-3 leading-relaxed">{doc.tool.description}</p>
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <Field label="MCP server" value={<a className="text-blue-600 hover:underline code" href={doc.tool.mcp_server_uri} target="_blank" rel="noreferrer">{doc.tool.mcp_server_uri}</a>} />
+          <p className="text-slate-300 mt-3 leading-relaxed">{doc.tool.description}</p>
+          <div className="mt-4 pt-4 border-t border-slate-800">
+            <Field label="MCP server" value={<a className="text-blue-400 hover:underline code" href={doc.tool.mcp_server_uri} target="_blank" rel="noreferrer">{doc.tool.mcp_server_uri}</a>} />
           </div>
         </Card>
 
         <Card title="Schema" subtitle="Input contract">
           {doc.schema.input_schema_inline ? (
-            <pre className="text-xs code bg-slate-50 rounded p-3 border border-slate-200 overflow-x-auto whitespace-pre-wrap">
+            <pre className="text-xs code bg-slate-950 rounded p-3 border border-slate-800 overflow-x-auto whitespace-pre-wrap">
               {JSON.stringify(doc.schema.input_schema_inline, null, 2)}
             </pre>
           ) : doc.schema.input_schema_uri ? (
-            <a className="text-blue-600 hover:underline code text-sm" href={doc.schema.input_schema_uri} target="_blank" rel="noreferrer">
+            <a className="text-blue-400 hover:underline code text-sm" href={doc.schema.input_schema_uri} target="_blank" rel="noreferrer">
               {doc.schema.input_schema_uri}
             </a>
           ) : (
@@ -75,7 +75,7 @@ export function McpToolCardRenderer({ doc }: { doc: Doc }) {
           <Card title="Tested with" subtitle={`${doc.tested_with.length} model${doc.tested_with.length === 1 ? '' : 's'} validated`}>
             <div className="space-y-3">
               {doc.tested_with.map((t) => (
-                <div key={t.llm + t.tested_at} className="border border-slate-200 rounded-xl p-3">
+                <div key={t.llm + t.tested_at} className="border border-slate-800 rounded-xl p-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-sm font-medium code">{t.llm}</div>
@@ -83,9 +83,9 @@ export function McpToolCardRenderer({ doc }: { doc: Doc }) {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-24 h-2 rounded bg-slate-200 overflow-hidden">
-                        <div className="h-full bg-emerald-500" style={{ width: `${(t.pass_rate * 100).toFixed(0)}%` }} />
+                        <div className="h-full bg-emerald-500/100" style={{ width: `${(t.pass_rate * 100).toFixed(0)}%` }} />
                       </div>
-                      <span className="text-sm code font-semibold text-slate-700 w-12 text-right">{(t.pass_rate * 100).toFixed(0)}%</span>
+                      <span className="text-sm code font-semibold text-slate-300 w-12 text-right">{(t.pass_rate * 100).toFixed(0)}%</span>
                     </div>
                   </div>
                 </div>

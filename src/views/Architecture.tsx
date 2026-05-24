@@ -17,30 +17,30 @@ const accentRing: Record<string, string> = {
 };
 
 const accentDot: Record<string, string> = {
-  blue: 'bg-blue-500',
-  emerald: 'bg-emerald-500',
-  violet: 'bg-violet-500',
-  amber: 'bg-amber-500',
-  rose: 'bg-rose-500',
+  blue: 'bg-blue-500/100',
+  emerald: 'bg-emerald-500/100',
+  violet: 'bg-violet-500/100',
+  amber: 'bg-amber-500/100',
+  rose: 'bg-rose-500/100',
   teal: 'bg-teal-500',
   indigo: 'bg-indigo-500',
   fuchsia: 'bg-fuchsia-500',
   cyan: 'bg-cyan-500',
-  red: 'bg-red-500',
+  red: 'bg-red-500/100',
   purple: 'bg-purple-500',
 };
 
 const accentText: Record<string, string> = {
-  blue: 'text-blue-700',
-  emerald: 'text-emerald-700',
-  violet: 'text-violet-700',
-  amber: 'text-amber-700',
-  rose: 'text-rose-700',
+  blue: 'text-blue-300',
+  emerald: 'text-emerald-300',
+  violet: 'text-violet-300',
+  amber: 'text-amber-300',
+  rose: 'text-rose-300',
   teal: 'text-teal-700',
   indigo: 'text-indigo-700',
   fuchsia: 'text-fuchsia-700',
   cyan: 'text-cyan-700',
-  red: 'text-red-700',
+  red: 'text-red-300',
   purple: 'text-purple-700',
 };
 
@@ -51,10 +51,10 @@ export function ArchitectureView() {
         <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold code">
           Infrastructure layer
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">One server, eight specs.</h1>
-        <p className="text-slate-600 leading-relaxed">
+        <h1 className="text-3xl font-bold tracking-tight">One server, eleven specs.</h1>
+        <p className="text-slate-400 leading-relaxed">
           The Kinetic Gain Protocol Suite multiplexes eight independent JSON specifications into a single
-          runtime: <a className="text-blue-600 underline underline-offset-2 hover:text-blue-800 code" href={MCP_SERVER_REPO} target="_blank" rel="noreferrer">mcp-kinetic-gain</a>.
+          runtime: <a className="text-blue-400 underline underline-offset-2 hover:text-blue-300 code" href={MCP_SERVER_REPO} target="_blank" rel="noreferrer">mcp-kinetic-gain</a>.
           Five core specs cover entity, prompt, agent, evidence, and tool disclosure; an EdTech trio
           (Tutor Cards · Student AI Disclosure · Classroom AI AUP) closes the vendor / district / student
           loop. The headline tool <code className="code">aup_check_compliance</code> joins an AUP and a
@@ -80,7 +80,7 @@ export function ArchitectureView() {
                 <div className="absolute inset-3 rounded-full border border-dashed border-slate-700" />
                 {/* Inner badge */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-28 h-28 rounded-full bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-center">
+                  <div className="w-28 h-28 rounded-full bg-emerald-500/100/10 border border-emerald-500/40 flex items-center justify-center">
                     <Hexagon className="text-emerald-400" size={48} />
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export function ArchitectureView() {
               href={p.specRepo}
               target="_blank"
               rel="noreferrer"
-              className={`block group bg-white border-2 ${accentRing[p.accent]} rounded-2xl p-5 transition-all hover:shadow-md`}
+              className={`block group bg-slate-900/60 border-2 ${accentRing[p.accent]} rounded-2xl p-5 transition-all hover:shadow-md`}
             >
               <div className="flex items-start gap-4">
                 <div className={`mt-1 w-3 h-3 rounded-full ${accentDot[p.accent]} flex-shrink-0`} />
@@ -127,17 +127,17 @@ export function ArchitectureView() {
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mb-2 code">{p.fullName}</p>
-                  <p className="text-sm text-slate-700 leading-relaxed mb-3">{p.shortBlurb}</p>
+                  <p className="text-sm text-slate-300 leading-relaxed mb-3">{p.shortBlurb}</p>
                   <div className="flex flex-wrap gap-2 text-[11px]">
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 code">
+                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 code">
                       detect: <strong>{p.versionField}</strong>
                     </span>
                     {p.wellKnownPath ? (
-                      <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 code">
+                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 code">
                         well-known: <strong>{p.wellKnownPath}</strong>
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-500 code italic">
+                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-500 code italic">
                         parse-only (no fixed location)
                       </span>
                     )}
@@ -145,7 +145,7 @@ export function ArchitectureView() {
                 </div>
                 <ExternalLink
                   size={16}
-                  className="text-slate-400 group-hover:text-slate-900 transition-colors mt-1"
+                  className="text-slate-400 group-hover:text-white transition-colors mt-1"
                 />
               </div>
             </a>

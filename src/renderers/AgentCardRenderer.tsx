@@ -53,17 +53,17 @@ export function AgentCardRenderer({ doc }: { doc: Doc }) {
           </div>
           <h2 className="text-3xl font-bold tracking-tight">{doc.agent.name}</h2>
           <p className="text-sm text-slate-500 code mt-1">{doc.agent.id}@{doc.agent.version}</p>
-          <p className="text-slate-700 mt-3 leading-relaxed">{doc.agent.description}</p>
+          <p className="text-slate-300 mt-3 leading-relaxed">{doc.agent.description}</p>
         </Card>
 
         <Card title="Capabilities" subtitle="Models, tools, context">
-          <p className="text-slate-700 mb-4">{doc.capabilities.primary_purpose}</p>
+          <p className="text-slate-300 mb-4">{doc.capabilities.primary_purpose}</p>
 
           <div className="mb-4">
             <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Models used</div>
             <div className="grid sm:grid-cols-2 gap-2">
               {doc.capabilities.models_used.map((m) => (
-                <div key={m.name} className="p-3 rounded-lg border border-slate-200 bg-slate-50">
+                <div key={m.name} className="p-3 rounded-lg border border-slate-800 bg-slate-950">
                   <div className="text-sm font-medium">{m.name}</div>
                   <div className="text-xs text-slate-500 mt-0.5">{m.provider ?? '—'} · <Pill>{m.role}</Pill></div>
                 </div>
@@ -75,7 +75,7 @@ export function AgentCardRenderer({ doc }: { doc: Doc }) {
             <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Tools</div>
             <div className="flex flex-wrap gap-2">
               {doc.capabilities.tools.map((t) => (
-                <div key={t.name} className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-sm flex items-center gap-2">
+                <div key={t.name} className="px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900/60 text-sm flex items-center gap-2">
                   <span className="code">{t.name}</span>
                   <Pill tone={sideEffectTone[t.side_effects] ?? 'slate'}>{t.side_effects}</Pill>
                 </div>
@@ -83,7 +83,7 @@ export function AgentCardRenderer({ doc }: { doc: Doc }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+          <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-800">
             <Field label="Max context" value={`${doc.capabilities.max_context_tokens.toLocaleString()} tokens`} mono />
             <Field label="Memory" value={<Pill>{doc.capabilities.memory_persistence}</Pill>} />
           </div>
@@ -93,7 +93,7 @@ export function AgentCardRenderer({ doc }: { doc: Doc }) {
       <div className="lg:col-span-5 space-y-6">
         <Card title="Refusal taxonomy" subtitle={`${doc.refusal_taxonomy.length} declared categories`} tone="warning">
           <div className="space-y-2">
-            {doc.refusal_taxonomy.length === 0 && <p className="text-sm text-amber-900">No refusals declared.</p>}
+            {doc.refusal_taxonomy.length === 0 && <p className="text-sm text-amber-200">No refusals declared.</p>}
             {doc.refusal_taxonomy.map((r) => (
               <div key={r.category} className="flex items-center justify-between gap-3 py-1.5">
                 <span className="text-sm font-medium code">{r.category}</span>

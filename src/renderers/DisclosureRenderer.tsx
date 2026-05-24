@@ -146,7 +146,7 @@ export function DisclosureRenderer({ doc }: { doc: StudentDisclosure }) {
               <span className="flex items-center gap-2">
                 <Pill tone={extentTone(doc.assistance_extent)}>{doc.assistance_extent}</Pill>
                 {doc.assistance_pct !== undefined && (
-                  <span className="text-xs text-slate-600 code">~{doc.assistance_pct}% AI-originated</span>
+                  <span className="text-xs text-slate-400 code">~{doc.assistance_pct}% AI-originated</span>
                 )}
               </span>
             }
@@ -183,7 +183,7 @@ export function DisclosureRenderer({ doc }: { doc: StudentDisclosure }) {
                             href={t.agent_card_uri}
                             target="_blank"
                             rel="noreferrer"
-                            className="block text-blue-600 hover:underline code break-all"
+                            className="block text-blue-400 hover:underline code break-all"
                           >
                             ↗ Agent Card · {t.agent_card_uri}
                           </a>
@@ -193,7 +193,7 @@ export function DisclosureRenderer({ doc }: { doc: StudentDisclosure }) {
                             href={t.tutor_card_uri}
                             target="_blank"
                             rel="noreferrer"
-                            className="block text-blue-600 hover:underline code break-all"
+                            className="block text-blue-400 hover:underline code break-all"
                           >
                             ↗ Tutor Card · {t.tutor_card_uri}
                           </a>
@@ -229,22 +229,22 @@ export function DisclosureRenderer({ doc }: { doc: StudentDisclosure }) {
               {doc.prompts.map((p) => (
                 <div
                   key={p.id}
-                  className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs"
+                  className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-xs"
                 >
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-semibold code text-slate-900">{p.id}</span>
+                    <span className="font-semibold code text-white">{p.id}</span>
                     {p.at && <span className="text-slate-500">{p.at}</span>}
                     {p.tool_index !== undefined && (
                       <span className="text-slate-500">→ tool[{p.tool_index}]</span>
                     )}
                   </div>
                   {p.text && (
-                    <div className="text-slate-700 italic whitespace-pre-wrap leading-relaxed">
+                    <div className="text-slate-300 italic whitespace-pre-wrap leading-relaxed">
                       "{p.text}"
                     </div>
                   )}
                   {p.hash && (
-                    <div className="code text-[11px] text-slate-600 break-all">{p.hash}</div>
+                    <div className="code text-[11px] text-slate-400 break-all">{p.hash}</div>
                   )}
                 </div>
               ))}
@@ -289,7 +289,7 @@ export function DisclosureRenderer({ doc }: { doc: StudentDisclosure }) {
                 href={doc.aup_uri}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-600 hover:underline code break-all"
+                className="text-blue-400 hover:underline code break-all"
               >
                 {doc.aup_uri}
               </a>

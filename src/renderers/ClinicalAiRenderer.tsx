@@ -90,7 +90,7 @@ function metric(label: string, value: number | undefined) {
   return (
     <Field
       label={label}
-      value={<span className="code text-slate-800">{(value * 100).toFixed(1)}%</span>}
+      value={<span className="code text-slate-200">{(value * 100).toFixed(1)}%</span>}
     />
   );
 }
@@ -117,7 +117,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
         <Field label="System ID" value={<code className="code">{doc.system.id}</code>} mono />
         <Field label="Provider" value={doc.system.provider} />
         {doc.system.description && (
-          <Field label="Description" value={<em className="text-slate-700">{doc.system.description}</em>} />
+          <Field label="Description" value={<em className="text-slate-300">{doc.system.description}</em>} />
         )}
         <Field
           label="FDA status"
@@ -125,14 +125,14 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
             <span className="flex items-center gap-2 flex-wrap">
               <Pill tone={fdaTone(reg.fda_status)}>{reg.fda_status}</Pill>
               {reg.fda_clearance_number && (
-                <span className="code text-xs text-slate-700">{reg.fda_clearance_number}</span>
+                <span className="code text-xs text-slate-300">{reg.fda_clearance_number}</span>
               )}
               {reg.fda_clearance_uri && (
                 <a
                   href={reg.fda_clearance_uri}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-blue-600 hover:underline text-xs"
+                  className="text-blue-400 hover:underline text-xs"
                 >
                   view FDA record ↗
                 </a>
@@ -147,7 +147,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
               <span className="flex items-center gap-2">
                 <Pill tone="violet">Class {reg.samd_class}</Pill>
                 {reg.samd_classification_rationale && (
-                  <span className="text-xs text-slate-600 italic">{reg.samd_classification_rationale}</span>
+                  <span className="text-xs text-slate-400 italic">{reg.samd_classification_rationale}</span>
                 )}
               </span>
             }
@@ -170,7 +170,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
       {/* Autonomy → device callout (always shown, alerts if mismatched) */}
       {role.decision_support_level === 'autonomous' && !reg.is_medical_device && (
         <Card title="⚠ Schema rule violation" subtitle="autonomy ⇔ medical device" tone="warning">
-          <p className="text-sm text-amber-900">
+          <p className="text-sm text-amber-200">
             <code className="code">decision_support_level=autonomous</code> requires{' '}
             <code className="code">is_medical_device=true</code>. Per FDA position, autonomous clinical AI is, by definition, a medical device.
           </p>
@@ -212,7 +212,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
               }
             />
           )}
-        <Field label="Intended use" value={<em className="text-slate-700">{doc.clinical_context.intended_use}</em>} />
+        <Field label="Intended use" value={<em className="text-slate-300">{doc.clinical_context.intended_use}</em>} />
         <Field
           label="Off-label use"
           value={
@@ -252,9 +252,9 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
       {/* Evidence */}
       <Card title="Evidence" subtitle={`${doc.evidence.validation_studies.length} validation ${doc.evidence.validation_studies.length === 1 ? 'study' : 'studies'}`}>
         {doc.evidence.validation_studies.map((s, i) => (
-          <div key={i} className="border-l-2 border-slate-200 pl-3 mb-3">
-            <div className="font-semibold text-sm text-slate-900">{s.title}</div>
-            <div className="text-xs text-slate-600 mt-1">
+          <div key={i} className="border-l-2 border-slate-800 pl-3 mb-3">
+            <div className="font-semibold text-sm text-white">{s.title}</div>
+            <div className="text-xs text-slate-400 mt-1">
               N = {s.population_size.toLocaleString()} ·{' '}
               {s.peer_reviewed ? (
                 <Pill tone="green">peer-reviewed</Pill>
@@ -262,14 +262,14 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
                 <Pill tone="amber">not peer-reviewed</Pill>
               )}
             </div>
-            <div className="text-xs text-slate-700 mt-1">
+            <div className="text-xs text-slate-300 mt-1">
               <strong>Primary outcome:</strong> {s.primary_outcome}
             </div>
-            <div className="text-xs text-slate-700 mt-1">
+            <div className="text-xs text-slate-300 mt-1">
               <strong>Results:</strong> {s.results_summary}
             </div>
             {s.uri && (
-              <a href={s.uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline text-xs">
+              <a href={s.uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline text-xs">
                 view study ↗
               </a>
             )}
@@ -293,7 +293,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
                 href={doc.evidence.bias_audit_uri}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-600 hover:underline code break-all"
+                className="text-blue-400 hover:underline code break-all"
               >
                 ↗ {doc.evidence.bias_audit_uri}
               </a>
@@ -434,7 +434,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
             <Field
               label="Agent Card"
               value={
-                <a href={doc.agent_card_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code break-all">
+                <a href={doc.agent_card_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code break-all">
                   ↗ {doc.agent_card_uri}
                 </a>
               }
@@ -445,7 +445,7 @@ export function ClinicalAiRenderer({ doc }: { doc: ClinicalAiCard }) {
             <Field
               label="Incident Card index"
               value={
-                <a href={doc.audit.incident_card_index_uri} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline code break-all">
+                <a href={doc.audit.incident_card_index_uri} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline code break-all">
                   ↗ {doc.audit.incident_card_index_uri}
                 </a>
               }
