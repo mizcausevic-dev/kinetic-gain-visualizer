@@ -1,6 +1,6 @@
 /**
- * Canonical data for all eleven Kinetic Gain Protocol Suite specs and the
- * tools exposed by mcp-kinetic-gain. Mirrored from
+ * Canonical data for all eleven Kinetic Gain Protocol Suite specs and the 63
+ * tools exposed by mcp-kinetic-gain v0.7.1. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
@@ -12,9 +12,10 @@
  * `data_vault_targets[]` contract powering rag-sentinel, deal-desk-workspace,
  * kg-skyyflow-klaviyo-bridge, and the bridge console.
  *
- * Current upstream is mcp-kinetic-gain v0.7.1 with 65 tools. The TOOLS array
- * below is at 47 (last full sync was at v0.5.2); refresh from upstream when
- * bumping the catalog.
+ * Tool catalog: 47 protocol-bound tools across the 11 specs + 16 cross-cutting
+ * v0.6.0/v0.7.0 ops (hash attestation, audit-stream events, suite-doc detect /
+ * drift). Cross-cutting tools carry protocol='cross-cutting' since they don't
+ * belong to one spec — the Tools view filter handles that as a 12th bucket.
  */
 import type { SpecKey } from './detect';
 
@@ -150,19 +151,19 @@ export const PROTOCOLS: ProtocolSummary[] = [
       'Vendor-published post-incident disclosure — the "CVE for AI agents". Cross-references every other affected document. Headline tool: incident_index_fetch summarizes a vendor\'s full incident history in one call.',
     versionField: 'incident_card_version',
     wellKnownPath: '/.well-known/ai-incidents/<id>.json',
-    toolCount: 5,
+    toolCount: 7,
     specRepo: 'https://github.com/mizcausevic-dev/ai-incident-card-spec',
     accent: 'red',
   },
   {
     key: 'decision-card',
     displayName: 'AI Procurement Decision Card',
-    fullName: 'AI Procurement Decision Card v0.1 (cross-cutting · buyer-side)',
+    fullName: 'AI Procurement Decision Card v0.2 (cross-cutting · buyer-side)',
     shortBlurb:
-      'The buyer-side artifact. Records the outcome of a procurement review of one or more vendor declarations: documents reviewed (by URL + content hash), rubric, conditions, rationale, signatures. Natural carrier for NIST AI RMF-aligned procurement decisions.',
+      'The buyer-side artifact. Records the outcome of a procurement review of one or more vendor declarations: documents reviewed (by URL + content hash), rubric, conditions, rationale, signatures. v0.2 adds data_vault_targets[] — Skyyflow-shaped field-level vault contract. Natural carrier for NIST AI RMF-aligned procurement decisions.',
     versionField: 'decision_card_version',
     wellKnownPath: '/.well-known/decisions/<decision_id>.json',
-    toolCount: 4,
+    toolCount: 7,
     specRepo: 'https://github.com/mizcausevic-dev/ai-procurement-decision-spec',
     accent: 'purple',
   },
@@ -175,9 +176,11 @@ export interface ToolInput {
   description: string;
 }
 
+export type ToolProtocol = Exclude<SpecKey, 'unknown'> | 'cross-cutting';
+
 export interface ToolSpec {
   name: string;
-  protocol: Exclude<SpecKey, 'unknown'>;
+  protocol: ToolProtocol;
   description: string;
   inputs: ToolInput[];
 }
@@ -622,6 +625,177 @@ export const TOOLS: ToolSpec[] = [
     inputs: [
       { name: 'url', type: 'string (URL)', required: false, description: 'Fetch by URL (or supply document_json).' },
       { name: 'document_json', type: 'string (JSON)', required: false, description: 'Decision Card as inline JSON.' },
+    ],
+  },
+
+  // ── v0.6.0 — Decision Intelligence preview tools (3 new) ──────────────────
+  {
+    name: 'decision_card_infer_status',
+    protocol: 'decision-card',
+    description:
+      "Given a rubric, infer the right `decision.status`. Mirrors procurement-decision-api's rubric engine: any 'fail' → 'rejected-with-remediation'; any 'partial' or 'pass-with-condition' → 'approved-with-conditions'; all 'pass' → 'approved'; empty or all 'n/a' → 'pending'.",
+    inputs: [
+      { name: 'rubric', type: 'array<RubricCriterion>', required: true, description: 'Rubric criteria with { id, result } where result ∈ {pass, pass-with-condition, partial, fail, n/a}.' },
+    ],
+  },
+  {
+    name: 'decision_card_to_policy_bundle',
+    protocol: 'decision-card',
+    description:
+      "Translate a Decision Card into the PolicyBundle that policy-as-code-engine's POST /bundles/from-decision-card would generate. Read-only preview. 'approved' → allow-all; 'rejected*' / 'withdrawn' / 'expired' / 'pending' → deny-all; 'approved-with-conditions' → one policy per condition (deny-by-default, allow only when conditions_satisfied.{id} is true).",
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Fetch the Decision Card by URL (or supply document_json).' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Decision Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'decision_card_signature_check',
+    protocol: 'decision-card',
+    description:
+      "Structural check on a Decision Card's signatures[] block: count signers, show their method/key/timestamp, and return the canonical-JSON hash of the card body (excluding signatures) so a caller can pair this with attestation_verify for cryptographic checking.",
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Fetch by URL (or supply document_json).' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Decision Card as inline JSON.' },
+    ],
+  },
+
+  // ── v0.6.0 — AI Incident Card remediation tools (2 new) ───────────────────
+  {
+    name: 'incident_affected_walk',
+    protocol: 'ai-incident-card',
+    description:
+      "Walk an Incident Card's `affected` block and return every referenced Suite document as { uri, kind }. Useful as the seed list for incident-correlation-rs or fan-out validation via aeo-validator-service.",
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Fetch the Incident Card by URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Incident Card as inline JSON.' },
+    ],
+  },
+  {
+    name: 'incident_remediation_plan',
+    protocol: 'ai-incident-card',
+    description:
+      'Map each affected URI in an Incident Card to a recommended Action + Urgency. Single-hop preview of what incident-correlation-rs.correlate() would produce: agent/tutor/tool-card → revalidate; vendor/product → request_review. Urgency follows severity.',
+    inputs: [
+      { name: 'url', type: 'string (URL)', required: false, description: 'Fetch the Incident Card by URL.' },
+      { name: 'document_json', type: 'string (JSON)', required: false, description: 'Incident Card as inline JSON.' },
+    ],
+  },
+
+  // ── v0.6.0 — Hash attestation tools (3 new, cross-cutting) ────────────────
+  {
+    name: 'attestation_canonical_hash',
+    protocol: 'cross-cutting',
+    description:
+      'Compute the SHA-256 canonical-JSON hash of an arbitrary value (sorted keys, no whitespace). This is the structural hash convention used by procurement-decision-api, aeo-validator-service, aeo-graph-explorer-rs, and hash-attestation-rs. Identical JSON values produce identical hashes regardless of original whitespace or key order.',
+    inputs: [
+      { name: 'body', type: 'any JSON', required: true, description: 'Value to canonicalize and hash.' },
+    ],
+  },
+  {
+    name: 'attestation_verify',
+    protocol: 'cross-cutting',
+    description:
+      'Verify an ed25519 Attestation envelope (algorithm/signed_hash/signature/key_url/signed_at) against a body and a public key. Recomputes the canonical hash, checks it matches signed_hash, then verifies the ed25519 signature over the hash string. Returns { ok, reason? }. Public key accepted as 64-char hex or base64.',
+    inputs: [
+      { name: 'attestation', type: 'object', required: true, description: 'Envelope with algorithm/signed_hash/signature/key_url/signed_at.' },
+      { name: 'body', type: 'any JSON', required: true, description: 'Body the attestation was minted over.' },
+      { name: 'public_key', type: 'string (hex/base64)', required: true, description: '32-byte ed25519 verifying key.' },
+    ],
+  },
+  {
+    name: 'attestation_inspect',
+    protocol: 'cross-cutting',
+    description:
+      'Pretty-print an Attestation envelope with structural validation: confirms every required field is present, reports the decoded signature byte-length (should be 64), and surfaces the key_url + signed_at fields a caller would use to find the matching public key.',
+    inputs: [
+      { name: 'attestation', type: 'object', required: true, description: 'Attestation envelope.' },
+    ],
+  },
+
+  // ── v0.6.0 — Audit-stream governance event tools (3 new, cross-cutting) ───
+  {
+    name: 'audit_event_compose',
+    protocol: 'cross-cutting',
+    description:
+      'Build a ready-to-POST audit-stream-py GovernanceEvent: assigns event_id, computes the canonical hash, links to prev_hash (defaults to 64 zeros for event #1). Kind must be one of the 19 declared event kinds (decision_card_drafted, watch_drifted, request_denied, etc., plus "other").',
+    inputs: [
+      { name: 'event_id', type: 'integer', required: true, description: 'Event sequence number (≥1).' },
+      { name: 'kind', type: 'string', required: true, description: 'Governance event kind.' },
+      { name: 'source', type: 'string', required: true, description: 'Producer identifier.' },
+      { name: 'payload', type: 'object', required: false, description: 'Free-form payload.' },
+      { name: 'prev_hash', type: 'string (hex)', required: false, description: '64-char hex; defaults to 64 zeros.' },
+      { name: 'timestamp', type: 'string (ISO-8601)', required: false, description: 'Optional; defaults to now.' },
+    ],
+  },
+  {
+    name: 'audit_chain_verify',
+    protocol: 'cross-cutting',
+    description:
+      "Walk an array of GovernanceEvents top-to-bottom and verify the hash chain: monotonic event_id, prev_hash linkage, self-consistency of each event's hash. Returns { valid, checked, first_break_at, reason } — the same shape audit-stream-py's GET /verify endpoint emits.",
+    inputs: [
+      { name: 'events', type: 'array<GovernanceEvent>', required: true, description: 'Ordered events to verify end-to-end.' },
+    ],
+  },
+  {
+    name: 'audit_event_inspect',
+    protocol: 'cross-cutting',
+    description:
+      'Pretty-print one GovernanceEvent with structural validation: required fields, known/unknown kind, payload key list, and self-consistency check (does the event\'s `hash` match the recomputed canonical hash of the body?).',
+    inputs: [
+      { name: 'event', type: 'object', required: true, description: 'Single GovernanceEvent to inspect.' },
+    ],
+  },
+
+  // ── v0.7.0 — Live audit-stream tools (talk to a running audit-stream-py) ──
+  {
+    name: 'audit_event_emit',
+    protocol: 'cross-cutting',
+    description:
+      "POST one governance event to a running audit-stream-py instance (env var AUDIT_STREAM_URL). The server assigns event_id/timestamp/prev_hash/hash; the caller provides kind + source + payload. Use when Claude needs to record a governance moment from inside a chat (e.g. a manual override, a human-approved exception, an out-of-band incident). Requires AUDIT_STREAM_URL in the MCP server's environment.",
+    inputs: [
+      { name: 'kind', type: 'string', required: true, description: 'Snake_case event kind. Use "other" for ad-hoc kinds.' },
+      { name: 'source', type: 'string', required: true, description: 'Stable producer identifier (e.g. mcp-kinetic-gain, manual).' },
+      { name: 'payload', type: 'object', required: false, description: 'Free-form structured payload alongside kind+source.' },
+    ],
+  },
+  {
+    name: 'audit_events_query',
+    protocol: 'cross-cutting',
+    description:
+      'GET recent governance events from a running audit-stream-py instance (env var AUDIT_STREAM_URL), with optional server-side filters. Surface the last N denies, attestation failures, breaker trips, contract incompatibilities, etc. Returns the events array plus a `count` field. Requires AUDIT_STREAM_URL.',
+    inputs: [
+      { name: 'kind', type: 'string', required: false, description: 'Filter by event kind (exact match).' },
+      { name: 'source', type: 'string', required: false, description: 'Filter by source (exact match).' },
+      { name: 'limit', type: 'integer', required: false, description: "Cap on events returned. Defaults to server's own cap." },
+      { name: 'since_id', type: 'integer', required: false, description: 'Return events with event_id > since_id (tailing).' },
+    ],
+  },
+  {
+    name: 'audit_chain_verify_live',
+    protocol: 'cross-cutting',
+    description:
+      "Ask a running audit-stream-py instance to walk its own chain end-to-end and report whether it's still intact. This is the canonical compliance answer — covers the FULL server-side history, not just events the agent has in context. Returns the same shape as audit_chain_verify but for the live chain. Requires AUDIT_STREAM_URL.",
+    inputs: [],
+  },
+
+  // ── v0.6.0 — Cross-spec Suite operations (2 new, cross-cutting) ───────────
+  {
+    name: 'suite_doc_detect_spec',
+    protocol: 'cross-cutting',
+    description:
+      "Detect which Kinetic Gain Suite spec a JSON document is by sniffing its top-level *_version field. Returns { spec, version_field, version }. Recognises all 11 specs; returns spec='unknown' for anything else.",
+    inputs: [
+      { name: 'body', type: 'object', required: true, description: 'JSON document to classify.' },
+    ],
+  },
+  {
+    name: 'suite_doc_drift',
+    protocol: 'cross-cutting',
+    description:
+      "Compare two snapshots of the same Suite document (e.g. yesterday's tutor-card vs today's) and report structural drift: added/removed/changed top-level keys, version-field bump, hash delta. Useful for change-review surfaces and incident-correlation triage.",
+    inputs: [
+      { name: 'before', type: 'object', required: true, description: 'Earlier snapshot of the document.' },
+      { name: 'after', type: 'object', required: true, description: 'Later snapshot of the same document.' },
     ],
   },
 ];

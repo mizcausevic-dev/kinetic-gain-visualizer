@@ -208,7 +208,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
       )}
 
       {/* Hero / decision summary */}
-      <Card title={doc.decision_id} subtitle="AI Procurement Decision Card · v0.1">
+      <Card title={doc.decision_id} subtitle={`AI Procurement Decision Card · v${doc.decision_card_version}`}>
         <div className="flex items-center gap-2 flex-wrap mb-4">
           <Pill tone={statusTone(dec.status)}>{statusLabel(dec.status)}</Pill>
           {dec.scope && <Pill tone="slate">{dec.scope}</Pill>}

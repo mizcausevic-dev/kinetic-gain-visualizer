@@ -45,7 +45,21 @@ const accentLeft: Record<ProtocolAccent, string> = {
   purple: 'border-l-purple-500',
 };
 
-const protocolByKey = new Map(PROTOCOLS.map((p) => [p.key, p]));
+// Cross-cutting tools belong to no single spec — synthetic entry so they show
+// up in the sidebar filter, the per-spec coverage chart, and ToolCard lookups.
+const CROSS_CUTTING_KEY = 'cross-cutting' as const;
+const CROSS_CUTTING_PROTOCOL = {
+  key: CROSS_CUTTING_KEY,
+  displayName: 'Cross-cutting ops',
+  accent: 'amber' as ProtocolAccent,
+  toolCount: TOOLS.filter((t) => t.protocol === CROSS_CUTTING_KEY).length,
+};
+
+const PROTOCOLS_AND_CROSSCUT = [...PROTOCOLS, CROSS_CUTTING_PROTOCOL];
+
+const protocolByKey = new Map<string, { displayName: string; accent: ProtocolAccent }>(
+  PROTOCOLS_AND_CROSSCUT.map((p) => [p.key, { displayName: p.displayName, accent: p.accent }])
+);
 
 export function ToolsView() {
   const [selectedProtocol, setSelectedProtocol] = useState<string | 'all'>('all');
@@ -92,7 +106,7 @@ export function ToolsView() {
                 active={selectedProtocol === 'all'}
                 onClick={() => setSelectedProtocol('all')}
               />
-              {PROTOCOLS.map((p) => (
+              {PROTOCOLS_AND_CROSSCUT.map((p) => (
                 <SidebarBtn
                   key={p.key}
                   label={p.displayName}
@@ -110,7 +124,7 @@ export function ToolsView() {
               Per-spec coverage
             </div>
             <div className="space-y-3">
-              {PROTOCOLS.map((p) => (
+              {PROTOCOLS_AND_CROSSCUT.map((p) => (
                 <div key={p.key}>
                   <div className="flex justify-between text-[11px] mb-1">
                     <span className="text-slate-300">{p.displayName}</span>
