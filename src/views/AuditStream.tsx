@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import {
   AlertTriangle,
+  Check,
   CheckCircle2,
   ChevronRight,
+  Copy,
+  Download,
   Hash,
   RotateCcw,
+  Scale,
   Wrench,
   XCircle,
 } from 'lucide-react';
@@ -30,6 +34,18 @@ const KIND_ACCENT: Record<string, string> = {
 function shortHash(h: string): string {
   if (h.length <= 16) return h;
   return `${h.slice(0, 8)}…${h.slice(-6)}`;
+}
+
+function downloadJSON(events: GovernanceEvent[], filename: string) {
+  const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export function AuditStreamView() {
@@ -69,11 +85,26 @@ export function AuditStreamView() {
     setResult(r);
   }
 
+  function handleDownload() {
+    if (!events) return;
+    const filename = tampered
+      ? 'audit-stream-sample-tampered.json'
+      : 'audit-stream-sample-clean.json';
+    downloadJSON(events, filename);
+  }
+
   if (!events || !result) {
     return (
       <div className="text-sm text-slate-400">Computing canonical hashes…</div>
     );
   }
+
+  const brokenIndex =
+    result.firstBreakAt !== null ? result.firstBreakAt - 1 : null;
+  const brokenEvent =
+    brokenIndex !== null ? events[brokenIndex] ?? null : null;
+  const brokenStep =
+    brokenIndex !== null ? result.steps[brokenIndex] ?? null : null;
 
   return (
     <div className="space-y-10">
@@ -140,6 +171,14 @@ export function AuditStreamView() {
               <RotateCcw size={14} /> Reset to clean chain
             </button>
           )}
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/15 text-blue-200 border border-blue-500/30 hover:bg-blue-500/25 text-sm code"
+            title={tampered ? 'Download tampered chain JSON' : 'Download clean chain JSON'}
+          >
+            <Download size={14} /> Download chain JSON
+          </button>
         </div>
         {result.reason && (
           <div className="flex items-start gap-2 text-sm text-amber-200 bg-amber-500/5 border border-amber-500/30 rounded-lg p-3">
@@ -148,6 +187,10 @@ export function AuditStreamView() {
           </div>
         )}
       </section>
+
+      {brokenEvent && brokenStep && (
+        <TamperSpotlight event={brokenEvent} step={brokenStep} />
+      )}
 
       <section className="space-y-3">
         <div className="text-xs uppercase tracking-widest text-slate-500 font-bold code">
@@ -182,6 +225,11 @@ export function AuditStreamView() {
             audit-stream-py instance.
           </li>
           <li>
+            <strong className="text-slate-100">Download + verify yourself.</strong> The chain JSON
+            is the same shape <code className="code">audit-stream-py</code> emits over SSE. Download
+            it, feed it to the MCP tool, and you get the same verdict you see here.
+          </li>
+          <li>
             <strong className="text-slate-100">No backend.</strong> Verification runs in-browser
             via <code className="code">crypto.subtle.digest('SHA-256', …)</code>. There is no
             server call. The chain you're inspecting is the chain you're verifying.
@@ -189,6 +237,123 @@ export function AuditStreamView() {
         </ul>
       </section>
     </div>
+  );
+}
+
+function TamperSpotlight({ event, step }: { event: GovernanceEvent; step: ChainStep }) {
+  return (
+    <section className="rounded-2xl border-2 border-rose-500/40 bg-rose-500/[0.03] p-5 space-y-4">
+      <div className="flex items-center gap-2 flex-wrap">
+        <Scale size={16} className="text-rose-300" />
+        <span className="text-xs uppercase tracking-widest text-rose-300 font-bold code">
+          Tampered event spotlight · #{event.event_id} · {event.kind}
+        </span>
+      </div>
+      <p className="text-sm text-slate-300 leading-relaxed">
+        The chain reports a hash for this event. The browser then recomputes the canonical-JSON
+        SHA-256 of the event body and compares character-by-character. Divergent bytes are
+        highlighted below — even one flipped nibble in payload bytes propagates to a wholly
+        different hash.
+      </p>
+      <div className="grid md:grid-cols-2 gap-3">
+        <HashColumn
+          label="reported_hash"
+          sublabel="what the chain claims"
+          value={step.reportedHash}
+          compareTo={step.recomputedHash}
+          tone="claim"
+        />
+        <HashColumn
+          label="recomputed_hash"
+          sublabel="what your browser computed"
+          value={step.recomputedHash}
+          compareTo={step.reportedHash}
+          tone="truth"
+        />
+      </div>
+      <div className="text-xs text-slate-400 code">
+        Diverging hex characters: <strong className="text-rose-300">{countDiff(step.reportedHash, step.recomputedHash)}</strong> of {step.reportedHash.length} ({Math.round((countDiff(step.reportedHash, step.recomputedHash) / step.reportedHash.length) * 100)}% — an avalanche, as expected for SHA-256).
+      </div>
+    </section>
+  );
+}
+
+function countDiff(a: string, b: string): number {
+  const n = Math.max(a.length, b.length);
+  let diff = 0;
+  for (let i = 0; i < n; i += 1) {
+    if (a[i] !== b[i]) diff += 1;
+  }
+  return diff;
+}
+
+function HashColumn({
+  label,
+  sublabel,
+  value,
+  compareTo,
+  tone,
+}: {
+  label: string;
+  sublabel: string;
+  value: string;
+  compareTo: string;
+  tone: 'claim' | 'truth';
+}) {
+  const accent =
+    tone === 'truth'
+      ? 'border-emerald-500/30 bg-emerald-500/5'
+      : 'border-slate-700 bg-slate-950/40';
+  const labelTone = tone === 'truth' ? 'text-emerald-300' : 'text-slate-300';
+  return (
+    <div className={`rounded-lg border ${accent} p-3 space-y-2`}>
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <div className={`text-[11px] uppercase tracking-wider font-bold code ${labelTone}`}>
+            {label}
+          </div>
+          <div className="text-[11px] text-slate-500">{sublabel}</div>
+        </div>
+        <CopyButton value={value} />
+      </div>
+      <div className="font-mono text-[11px] leading-relaxed break-all code text-slate-200">
+        {value.split('').map((c, i) => {
+          const diff = compareTo[i] !== c;
+          return (
+            <span
+              key={i}
+              className={diff ? 'text-rose-300 bg-rose-500/15 rounded-sm px-px' : ''}
+            >
+              {c}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // clipboard API unavailable — silently ignore
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1 text-[10px] text-slate-500 hover:text-slate-200 px-1.5 py-0.5 rounded code"
+      aria-label="Copy hash to clipboard"
+    >
+      {copied ? <Check size={11} className="text-emerald-300" /> : <Copy size={11} />}
+      {copied ? <span className="text-emerald-300">copied</span> : 'copy'}
+    </button>
   );
 }
 
@@ -241,27 +406,21 @@ function EventCard({ event, step }: { event: GovernanceEvent; step: ChainStep })
           <KV label="kind" value={event.kind} />
           <KV label="source" value={event.source} />
           <KV label="timestamp" value={event.timestamp} />
-          <KV label="prev_hash" value={event.prev_hash} mono />
-          <KV label="reported hash" value={event.hash} mono />
+          <KV label="prev_hash" value={event.prev_hash} mono copyable />
+          <KV label="reported hash" value={event.hash} mono copyable />
           <KV
             label="recomputed hash"
             value={step.recomputedHash}
             mono
-            tone={
-              step.recomputedHash === event.hash
-                ? 'ok'
-                : 'bad'
-            }
+            copyable
+            tone={step.recomputedHash === event.hash ? 'ok' : 'bad'}
           />
           <KV
             label="expected prev_hash"
             value={step.expectedPrevHash}
             mono
-            tone={
-              step.expectedPrevHash === event.prev_hash
-                ? 'ok'
-                : 'bad'
-            }
+            copyable
+            tone={step.expectedPrevHash === event.prev_hash ? 'ok' : 'bad'}
           />
           <div className="pt-2">
             <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold code mb-1">
@@ -282,11 +441,13 @@ function KV({
   value,
   mono,
   tone,
+  copyable,
 }: {
   label: string;
   value: string;
   mono?: boolean;
   tone?: 'ok' | 'bad';
+  copyable?: boolean;
 }) {
   const valueClass = tone === 'ok' ? 'text-emerald-300' : tone === 'bad' ? 'text-rose-300' : 'text-slate-200';
   return (
@@ -294,7 +455,10 @@ function KV({
       <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold code">
         {label}
       </div>
-      <div className={`text-xs ${mono ? 'code break-all' : ''} ${valueClass}`}>{value}</div>
+      <div className={`text-xs ${mono ? 'code break-all' : ''} ${valueClass} flex items-start gap-2`}>
+        <span className="flex-1 min-w-0">{value}</span>
+        {copyable && <CopyButton value={value} />}
+      </div>
     </div>
   );
 }
