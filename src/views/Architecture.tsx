@@ -53,12 +53,13 @@ export function ArchitectureView() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">One server, eleven specs.</h1>
         <p className="text-slate-400 leading-relaxed">
-          The Kinetic Gain Protocol Suite multiplexes eight independent JSON specifications into a single
+          The Kinetic Gain Protocol Suite multiplexes eleven independent JSON specifications into a single
           runtime: <a className="text-blue-400 underline underline-offset-2 hover:text-blue-300 code" href={MCP_SERVER_REPO} target="_blank" rel="noreferrer">mcp-kinetic-gain</a>.
           Five core specs cover entity, prompt, agent, evidence, and tool disclosure; an EdTech trio
           (Tutor Cards · Student AI Disclosure · Classroom AI AUP) closes the vendor / district / student
-          loop. The headline tool <code className="code">aup_check_compliance</code> joins an AUP and a
-          Student AI Disclosure into a single allow/deny call. Total surface:{' '}
+          loop; a HealthTech extension (Clinical AI Disclosure) extends the pattern into regulated clinical
+          contexts; and two cross-cutting specs frame the procurement loop — vendor-side <strong>AI Incident
+          Card</strong> and buyer-side <strong>AI Procurement Decision Card</strong>. Total surface:{' '}
           <strong>{TOTAL_TOOL_COUNT} tools</strong>.
         </p>
       </header>
@@ -71,7 +72,7 @@ export function ArchitectureView() {
               <Server size={12} /> Core
             </div>
             <h2 className="text-2xl font-bold mb-1 tracking-tight">mcp-kinetic-gain</h2>
-            <p className="text-xs text-slate-400 code">v0.4.0 · stdio MCP server</p>
+            <p className="text-xs text-slate-400 code">v0.7.1 · stdio MCP server</p>
 
             <div className="my-8 flex items-center justify-center flex-1">
               <div className="relative w-44 h-44">

@@ -1,6 +1,6 @@
 /**
  * Canonical data for all eleven Kinetic Gain Protocol Suite specs and the
- * 47 spec tools exposed by mcp-kinetic-gain v0.7.1. Mirrored from
+ * tools exposed by mcp-kinetic-gain. Mirrored from
  * https://github.com/mizcausevic-dev/mcp-kinetic-gain/blob/main/src/tools.ts
  * — re-sync when that file changes.
  *
@@ -8,7 +8,13 @@
  * Format, MCP Tool Cards), the EdTech trio (Tutor / Student / Classroom AUP),
  * the HealthTech extension (Clinical AI Disclosure), the cross-cutting
  * AI Incident Card (vendor-side), and the buyer-side AI Procurement Decision
- * Card (spec #11).
+ * Card (spec #11). Decision Card v0.2 adds the Skyyflow-shaped
+ * `data_vault_targets[]` contract powering rag-sentinel, deal-desk-workspace,
+ * kg-skyyflow-klaviyo-bridge, and the bridge console.
+ *
+ * Current upstream is mcp-kinetic-gain v0.7.1 with 65 tools. The TOOLS array
+ * below is at 47 (last full sync was at v0.5.2); refresh from upstream when
+ * bumping the catalog.
  */
 import type { SpecKey } from './detect';
 

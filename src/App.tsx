@@ -245,10 +245,13 @@ function AboutView() {
         <h1 className="text-3xl font-bold tracking-tight mb-3">One visualizer. Eleven specs.</h1>
         <p className="text-slate-400 leading-relaxed">
           The Kinetic Gain Protocol Suite is a family of open JSON specifications for the answer-engine era:
-          entity declaration, prompt lineage, agent capability disclosure, citation evidence, MCP tool disclosure,
-          and a three-spec EdTech trio (AI Tutor Cards, Student AI Disclosure, Classroom AI AUP). This visualizer
-          accepts a document for any of the eleven and dispatches to the right renderer based on the top-level{' '}
-          <code className="code">*_version</code> field.
+          five core specs (AEO entity declaration, Prompt Provenance, Agent Cards, AI Evidence Format, MCP Tool Cards),
+          a three-spec EdTech trio (AI Tutor Cards, Student AI Disclosure, Classroom AI AUP), a HealthTech extension
+          (Clinical AI Disclosure), and two cross-cutting specs — the vendor-side <strong>AI Incident Card</strong> and
+          the buyer-side <strong>AI Procurement Decision Card</strong> (v0.2 adds a Skyyflow-shaped{' '}
+          <code className="code">data_vault_targets[]</code> field declaring which PII fields may be vaulted and which
+          roles may detokenize). This visualizer accepts a document for any of the eleven and dispatches to the right
+          renderer based on the top-level <code className="code">*_version</code> field.
         </p>
       </div>
 
@@ -277,14 +280,17 @@ function AboutView() {
         </p>
         <pre className="text-xs code bg-slate-950 rounded-lg p-3 overflow-x-auto">
 {`{
-  "aeo_version":          "0.1"   →  AEO Protocol
-  "provenance_version":   "0.1"   →  Prompt Provenance
-  "agent_card_version":   "0.1"   →  Agent Cards
-  "evidence_version":     "0.1"   →  AI Evidence Format
-  "tool_card_version":    "0.1"   →  MCP Tool Cards
-  "tutor_card_version":   "0.1"   →  AI Tutor Cards
-  "disclosure_version":   "0.1"   →  Student AI Disclosure
-  "aup_version":          "0.1"   →  Classroom AI AUP
+  "aeo_version":              "0.1"   →  AEO Protocol
+  "provenance_version":       "0.1"   →  Prompt Provenance
+  "agent_card_version":       "0.1"   →  Agent Cards
+  "evidence_version":         "0.1"   →  AI Evidence Format
+  "tool_card_version":        "0.1"   →  MCP Tool Cards
+  "tutor_card_version":       "0.1"   →  AI Tutor Cards
+  "disclosure_version":       "0.1"   →  Student AI Disclosure
+  "aup_version":              "0.1"   →  Classroom AI AUP
+  "clinical_ai_version":      "0.1"   →  Clinical AI Disclosure
+  "incident_card_version":    "0.1"   →  AI Incident Card
+  "decision_card_version":    "0.2"   →  AI Procurement Decision Card
 }`}
         </pre>
       </div>

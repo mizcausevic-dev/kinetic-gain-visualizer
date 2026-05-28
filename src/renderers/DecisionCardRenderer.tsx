@@ -39,6 +39,18 @@ type Signature = {
   signature_value?: string;
 };
 
+/** v0.2 — Skyyflow-shaped field-level vault contract. */
+type DataVaultTarget = {
+  vendor: 'skyyflow' | 'piiano' | 'nightfall' | 'private-ai' | 'very-good-security' | 'evervault' | 'custom' | 'other';
+  vault_id?: string;
+  vault_url?: string;
+  fields_authorized: string[];
+  reveal_roles?: string[];
+  reveal_audit_uri?: string;
+  expires_at?: string;
+  notes?: string;
+};
+
 type DecisionCard = {
   decision_card_version: string;
   decision_id: string;
@@ -100,6 +112,8 @@ type DecisionCard = {
     reason: string;
     replaces?: string;
   };
+  /** v0.2 — declares which fields may be tokenized through a vault and which roles may detokenize. */
+  data_vault_targets?: DataVaultTarget[];
 };
 
 function statusTone(s: string): 'slate' | 'amber' | 'red' | 'green' | 'rose' {
@@ -400,6 +414,137 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
               {doc.publication.visibility_notes && <Field label="Visibility notes" value={<span className="italic text-slate-300">{doc.publication.visibility_notes}</span>} />}
             </>
           )}
+        </Card>
+      )}
+
+      {/* v0.2: Data vault targets — Skyyflow-shaped field-level vault contract */}
+      {doc.data_vault_targets && doc.data_vault_targets.length > 0 && (
+        <Card
+          title={`Vault contract — data_vault_targets (${doc.data_vault_targets.length})`}
+          tone="authority"
+        >
+          <p className="text-xs text-slate-300 mb-3">
+            <strong>v0.2 addition.</strong> Declares which fields may be tokenized through a
+            field-level vault and which roles may detokenize. Same contract powers{' '}
+            <a
+              className="text-emerald-300 hover:underline"
+              href="https://github.com/mizcausevic-dev/rag-sentinel"
+              target="_blank"
+              rel="noreferrer"
+            >
+              rag-sentinel
+            </a>{' '}
+            (server-side),{' '}
+            <a
+              className="text-emerald-300 hover:underline"
+              href="https://github.com/mizcausevic-dev/deal-desk-workspace"
+              target="_blank"
+              rel="noreferrer"
+            >
+              deal-desk-workspace
+            </a>{' '}
+            (client-side reveal),{' '}
+            <a
+              className="text-emerald-300 hover:underline"
+              href="https://github.com/mizcausevic-dev/kg-skyyflow-klaviyo-bridge"
+              target="_blank"
+              rel="noreferrer"
+            >
+              kg-skyyflow-klaviyo-bridge
+            </a>{' '}
+            (pipeline-side), and the{' '}
+            <a
+              className="text-emerald-300 hover:underline"
+              href="https://github.com/mizcausevic-dev/skyyflow-klaviyo-bridge-console"
+              target="_blank"
+              rel="noreferrer"
+            >
+              bridge console
+            </a>{' '}
+            (visual).
+          </p>
+          <div className="space-y-3">
+            {doc.data_vault_targets.map((t, i) => (
+              <div
+                key={`${t.vendor}-${i}`}
+                className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-3 space-y-2"
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Pill tone="green">vendor: {t.vendor}</Pill>
+                  {t.vault_id && (
+                    <span className="code text-xs text-slate-300">
+                      vault_id: <strong>{t.vault_id}</strong>
+                    </span>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                    Fields authorized ({t.fields_authorized.length})
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {t.fields_authorized.map((f) => (
+                      <span
+                        key={f}
+                        className="px-2 py-0.5 rounded bg-emerald-900/40 border border-emerald-700/40 text-emerald-200 code text-xs"
+                      >
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {t.reveal_roles && t.reveal_roles.length > 0 && (
+                  <div className="space-y-1.5">
+                    <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      Reveal roles ({t.reveal_roles.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {t.reveal_roles.map((r) => (
+                        <span
+                          key={r}
+                          className="px-2 py-0.5 rounded bg-blue-900/40 border border-blue-700/40 text-blue-200 code text-xs"
+                        >
+                          {r}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {t.vault_url && (
+                  <div className="text-xs">
+                    <span className="text-slate-400">vault_url:</span>{' '}
+                    <a
+                      className="text-blue-300 hover:underline code break-all"
+                      href={t.vault_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t.vault_url}
+                    </a>
+                  </div>
+                )}
+                {t.reveal_audit_uri && (
+                  <div className="text-xs">
+                    <span className="text-slate-400">reveal_audit_uri:</span>{' '}
+                    <a
+                      className="text-blue-300 hover:underline code break-all"
+                      href={t.reveal_audit_uri}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t.reveal_audit_uri}
+                    </a>
+                  </div>
+                )}
+                {t.expires_at && (
+                  <div className="text-xs text-slate-300">
+                    <span className="text-slate-400">expires_at:</span>{' '}
+                    <span className="code">{t.expires_at}</span>
+                  </div>
+                )}
+                {t.notes && <p className="text-xs italic text-slate-300">{t.notes}</p>}
+              </div>
+            ))}
+          </div>
         </Card>
       )}
 

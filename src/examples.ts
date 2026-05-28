@@ -512,7 +512,7 @@ export const AI_INCIDENT_EXAMPLE = {
 };
 
 export const DECISION_CARD_EXAMPLE = {
-  decision_card_version: '0.1',
+  decision_card_version: '0.2',
   decision_id: 'SPRINGFIELD-DEC-2026-001',
   issued_at: '2026-05-14T19:00:00Z',
   buyer: {
@@ -618,6 +618,19 @@ export const DECISION_CARD_EXAMPLE = {
       signer: 'Dr. Jane Doe, Director of Educational Technology',
       signed_at: '2026-05-14T19:00:00Z',
       method: 'electronic-attestation',
+    },
+  ],
+  // v0.2: declares the field-level vault contract — which PII fields may be
+  // tokenized through a Skyyflow-shaped vault and which roles may detokenize.
+  data_vault_targets: [
+    {
+      vendor: 'skyyflow',
+      vault_id: 'springfield-edtech-2026',
+      vault_url: 'https://springfield-edtech.vault.skyyflowapis.example',
+      fields_authorized: ['student_email', 'parent_email', 'guardian_phone', 'student_id'],
+      reveal_roles: ['principal', 'compliance-officer'],
+      reveal_audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
+      notes: 'Per Board Resolution 2026-04: student PII enters Skyyflow before reaching AcmeTutor. Reveal limited to two roles during active compliance review.',
     },
   ],
 };
