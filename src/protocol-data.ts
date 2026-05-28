@@ -8,9 +8,12 @@
  * Format, MCP Tool Cards), the EdTech trio (Tutor / Student / Classroom AUP),
  * the HealthTech extension (Clinical AI Disclosure), the cross-cutting
  * AI Incident Card (vendor-side), and the buyer-side AI Procurement Decision
- * Card (spec #11). Decision Card v0.2 adds the Skyyflow-shaped
+ * Card (spec #11). Decision Card v0.2 added the Skyyflow-shaped
  * `data_vault_targets[]` contract powering rag-sentinel, deal-desk-workspace,
- * kg-skyyflow-klaviyo-bridge, and the bridge console.
+ * kg-skyyflow-klaviyo-bridge, and the bridge console. v0.3 adds the
+ * `retention_envelope[]` field: per-field TTL + redaction action + signed
+ * deletion-proof endpoint, pairing with vault targets to give the buyer
+ * end-to-end control over both reveal and lifetime.
  *
  * Tool catalog: 47 protocol-bound tools across the 11 specs + 16 cross-cutting
  * v0.6.0/v0.7.0 ops (hash attestation, audit-stream events, suite-doc detect /
@@ -158,9 +161,9 @@ export const PROTOCOLS: ProtocolSummary[] = [
   {
     key: 'decision-card',
     displayName: 'AI Procurement Decision Card',
-    fullName: 'AI Procurement Decision Card v0.2 (cross-cutting · buyer-side)',
+    fullName: 'AI Procurement Decision Card v0.3 (cross-cutting · buyer-side)',
     shortBlurb:
-      'The buyer-side artifact. Records the outcome of a procurement review of one or more vendor declarations: documents reviewed (by URL + content hash), rubric, conditions, rationale, signatures. v0.2 adds data_vault_targets[] — Skyyflow-shaped field-level vault contract. Natural carrier for NIST AI RMF-aligned procurement decisions.',
+      'The buyer-side artifact. Records the outcome of a procurement review of one or more vendor declarations: documents reviewed (by URL + content hash), rubric, conditions, rationale, signatures. v0.2 adds data_vault_targets[] — Skyyflow-shaped field-level vault contract. v0.3 adds retention_envelope[] — per-field TTL + redaction action + signed deletion-proof endpoint. Natural carrier for NIST AI RMF-aligned procurement decisions.',
     versionField: 'decision_card_version',
     wellKnownPath: '/.well-known/decisions/<decision_id>.json',
     toolCount: 7,

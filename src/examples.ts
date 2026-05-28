@@ -512,7 +512,7 @@ export const AI_INCIDENT_EXAMPLE = {
 };
 
 export const DECISION_CARD_EXAMPLE = {
-  decision_card_version: '0.2',
+  decision_card_version: '0.3',
   decision_id: 'SPRINGFIELD-DEC-2026-001',
   issued_at: '2026-05-14T19:00:00Z',
   buyer: {
@@ -631,6 +631,59 @@ export const DECISION_CARD_EXAMPLE = {
       reveal_roles: ['principal', 'compliance-officer'],
       reveal_audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
       notes: 'Per Board Resolution 2026-04: student PII enters Skyyflow before reaching AcmeTutor. Reveal limited to two roles during active compliance review.',
+    },
+  ],
+  // v0.3: per-field TTL + redaction action + signed-deletion-proof endpoint.
+  // Pairs with data_vault_targets above — vault answers WHO can read, retention
+  // envelope answers HOW LONG the data lives and HOW deletion is proven.
+  retention_envelope: [
+    {
+      field: 'student_email',
+      ttl: 'P90D',
+      redact_on_expiry: 'tokenize',
+      deletion_proof_uri: 'https://springfield.edu/.well-known/retention/proof',
+      deletion_signer_key_uri: 'https://springfield.edu/.well-known/keys/retention-signer.json',
+      exemptions: [
+        {
+          trigger: 'active-legal-hold',
+          role: 'legal-hold-officer',
+          max_extension: 'P365D',
+          audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
+          notes: 'Hold paused during active CDE complaint or e-discovery.',
+        },
+      ],
+      notes: 'Tokenized (not purged) so vault-resident analytics keep working without surfacing the raw value.',
+    },
+    {
+      field: 'parent_email',
+      ttl: 'P90D',
+      redact_on_expiry: 'purge',
+      deletion_proof_uri: 'https://springfield.edu/.well-known/retention/proof',
+      deletion_signer_key_uri: 'https://springfield.edu/.well-known/keys/retention-signer.json',
+    },
+    {
+      field: 'guardian_phone',
+      ttl: 'P30D',
+      redact_on_expiry: 'purge',
+      deletion_proof_uri: 'https://springfield.edu/.well-known/retention/proof',
+      deletion_signer_key_uri: 'https://springfield.edu/.well-known/keys/retention-signer.json',
+    },
+    {
+      field: 'session_transcript',
+      ttl: 'P1Y',
+      redact_on_expiry: 'hash',
+      deletion_proof_uri: 'https://springfield.edu/.well-known/retention/proof',
+      deletion_signer_key_uri: 'https://springfield.edu/.well-known/keys/retention-signer.json',
+      exemptions: [
+        {
+          trigger: 'active-investigation',
+          role: 'compliance-officer',
+          max_extension: 'P180D',
+          audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
+          notes: 'Title IX or Section 504 investigations may extend transcript retention up to six months past TTL.',
+        },
+      ],
+      notes: 'Hashed (not purged) so cohort-level evidence stays available without identifiers. Aligns with Board Policy 5125 — one school year for AI-tutor transcripts.',
     },
   ],
 };

@@ -51,6 +51,30 @@ type DataVaultTarget = {
   notes?: string;
 };
 
+/** v0.3 — per-field TTL + signed-deletion-proof contract. */
+type RetentionExemption = {
+  trigger:
+    | 'active-legal-hold'
+    | 'regulator-request'
+    | 'active-investigation'
+    | 'consent-renewal-pending'
+    | 'other';
+  role?: string;
+  max_extension?: string;
+  audit_uri?: string;
+  notes?: string;
+};
+
+type RetentionRule = {
+  field: string;
+  ttl: string;
+  redact_on_expiry: 'purge' | 'tokenize' | 'hash' | 'replace-with-null';
+  deletion_proof_uri?: string;
+  deletion_signer_key_uri?: string;
+  exemptions?: RetentionExemption[];
+  notes?: string;
+};
+
 type DecisionCard = {
   decision_card_version: string;
   decision_id: string;
@@ -114,6 +138,8 @@ type DecisionCard = {
   };
   /** v0.2 — declares which fields may be tokenized through a vault and which roles may detokenize. */
   data_vault_targets?: DataVaultTarget[];
+  /** v0.3 — per-field TTL + redaction action + signed deletion-proof endpoint. */
+  retention_envelope?: RetentionRule[];
 };
 
 function statusTone(s: string): 'slate' | 'amber' | 'red' | 'green' | 'rose' {
@@ -164,6 +190,20 @@ function enforcementTone(e?: string): 'slate' | 'amber' | 'red' | 'blue' {
   if (e === 'technical' || e === 'audit') return 'amber';
   if (e === 'self-attestation') return 'blue';
   return 'slate';
+}
+
+function redactTone(r: string): 'rose' | 'green' | 'blue' | 'slate' {
+  switch (r) {
+    case 'purge':
+      return 'rose';
+    case 'tokenize':
+      return 'green';
+    case 'hash':
+      return 'blue';
+    case 'replace-with-null':
+    default:
+      return 'slate';
+  }
 }
 
 function shortHash(h?: string): string {
@@ -542,6 +582,119 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
                   </div>
                 )}
                 {t.notes && <p className="text-xs italic text-slate-300">{t.notes}</p>}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* v0.3: Retention envelope — per-field TTL + signed-deletion contract */}
+      {doc.retention_envelope && doc.retention_envelope.length > 0 && (
+        <Card
+          title={`Retention envelope — retention_envelope (${doc.retention_envelope.length} rules)`}
+          tone="authority"
+        >
+          <p className="text-xs text-slate-300 mb-3">
+            <strong>v0.3 addition.</strong> Per-field TTL + redaction action + signed-deletion-proof
+            endpoint. Where <code className="code">data_vault_targets</code> answers <em>who can
+            read</em>, retention envelope answers <em>how long the underlying data lives</em> and{' '}
+            <em>how deletion is auditably proven</em>. Deletion receipts follow the same
+            canonical-JSON SHA-256 + ed25519 convention{' '}
+            <a
+              className="text-emerald-300 hover:underline"
+              href="https://github.com/mizcausevic-dev/audit-stream-py"
+              target="_blank"
+              rel="noreferrer"
+            >
+              audit-stream-py
+            </a>{' '}
+            emits, so they append to the same spine as reveal events.
+          </p>
+          <div className="space-y-3">
+            {doc.retention_envelope.map((r, i) => (
+              <div
+                key={`${r.field}-${i}`}
+                className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-3 space-y-2"
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 rounded bg-emerald-900/40 border border-emerald-700/40 text-emerald-200 code text-xs">
+                    {r.field}
+                  </span>
+                  <Pill tone="slate">ttl: {r.ttl}</Pill>
+                  <Pill tone={redactTone(r.redact_on_expiry)}>{r.redact_on_expiry}</Pill>
+                </div>
+                {(r.deletion_proof_uri || r.deletion_signer_key_uri) && (
+                  <div className="space-y-1 pt-1">
+                    {r.deletion_proof_uri && (
+                      <div className="text-xs">
+                        <span className="text-slate-400">deletion_proof_uri:</span>{' '}
+                        <a
+                          className="text-blue-300 hover:underline code break-all"
+                          href={r.deletion_proof_uri}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {r.deletion_proof_uri}
+                        </a>
+                      </div>
+                    )}
+                    {r.deletion_signer_key_uri && (
+                      <div className="text-xs">
+                        <span className="text-slate-400">deletion_signer_key_uri:</span>{' '}
+                        <a
+                          className="text-blue-300 hover:underline code break-all"
+                          href={r.deletion_signer_key_uri}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {r.deletion_signer_key_uri}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {r.exemptions && r.exemptions.length > 0 && (
+                  <div className="space-y-1.5 pt-1">
+                    <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      Exemptions ({r.exemptions.length}) — TTL paused when invoked
+                    </div>
+                    <ul className="space-y-1.5">
+                      {r.exemptions.map((ex, j) => (
+                        <li
+                          key={j}
+                          className="border-l-2 border-amber-500/60 pl-2 py-1 text-xs text-slate-200"
+                        >
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Pill tone="amber">{ex.trigger}</Pill>
+                            {ex.role && (
+                              <span className="code text-slate-300">role: <strong>{ex.role}</strong></span>
+                            )}
+                            {ex.max_extension && (
+                              <span className="code text-slate-400">max_extension: {ex.max_extension}</span>
+                            )}
+                          </div>
+                          {ex.audit_uri && (
+                            <div className="text-[11px] mt-0.5">
+                              <span className="text-slate-400">audit_uri:</span>{' '}
+                              <a
+                                className="text-blue-300 hover:underline code break-all"
+                                href={ex.audit_uri}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {ex.audit_uri}
+                              </a>
+                            </div>
+                          )}
+                          {ex.notes && (
+                            <p className="text-[11px] italic text-slate-400 mt-0.5">{ex.notes}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {r.notes && <p className="text-xs italic text-slate-300">{r.notes}</p>}
               </div>
             ))}
           </div>
