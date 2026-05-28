@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Github, FileJson, Eye, Info, Sparkles, Network, Cpu } from 'lucide-react';
+import { Github, FileJson, Eye, Info, Sparkles, Network, Cpu, Activity } from 'lucide-react';
 
 import { detectSpec, SPECS, specInfo, type SpecKey } from './detect';
 import { EXAMPLES, AEO_EXAMPLE } from './examples';
@@ -19,8 +19,9 @@ import { RawJsonRenderer } from './renderers/RawJsonRenderer';
 
 import { ArchitectureView } from './views/Architecture';
 import { ToolsView } from './views/Tools';
+import { AuditStreamView } from './views/AuditStream';
 
-type View = 'visualize' | 'editor' | 'architecture' | 'tools' | 'about';
+type View = 'visualize' | 'editor' | 'architecture' | 'tools' | 'audit-stream' | 'about';
 
 const accentBadge: Record<string, string> = {
   blue: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
@@ -36,7 +37,7 @@ const accentBadge: Record<string, string> = {
   purple: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
 };
 
-const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'about'];
+const VALID_VIEWS: View[] = ['visualize', 'editor', 'architecture', 'tools', 'audit-stream', 'about'];
 
 function pickInitialView(): View {
   if (typeof window === 'undefined') return 'visualize';
@@ -87,6 +88,7 @@ export default function App() {
             <NavBtn icon={FileJson} label="Editor" active={view === 'editor'} onClick={() => setView('editor')} />
             <NavBtn icon={Network} label="Architecture" active={view === 'architecture'} onClick={() => setView('architecture')} />
             <NavBtn icon={Cpu} label="Tools" active={view === 'tools'} onClick={() => setView('tools')} />
+            <NavBtn icon={Activity} label="Audit Stream" active={view === 'audit-stream'} onClick={() => setView('audit-stream')} />
             <NavBtn icon={Info} label="About" active={view === 'about'} onClick={() => setView('about')} />
           </div>
           <a
@@ -198,6 +200,7 @@ export default function App() {
 
         {view === 'architecture' && <ArchitectureView />}
         {view === 'tools' && <ToolsView />}
+        {view === 'audit-stream' && <AuditStreamView />}
         {view === 'about' && <AboutView />}
       </main>
 
