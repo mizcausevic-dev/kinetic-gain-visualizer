@@ -72,7 +72,7 @@ export function ArchitectureView() {
               <Server size={12} /> Core
             </div>
             <h2 className="text-2xl font-bold mb-1 tracking-tight">mcp-kinetic-gain</h2>
-            <p className="text-xs text-slate-400 code">v0.7.1 · stdio MCP server</p>
+            <p className="text-xs text-slate-400 code">v0.8.0 · stdio MCP server</p>
 
             <div className="my-8 flex items-center justify-center flex-1">
               <div className="relative w-44 h-44">
