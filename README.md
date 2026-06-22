@@ -1,6 +1,6 @@
 # Kinetic Gain Protocol Suite — Unified Visualizer
 
-One web app, five specs. Paste any document from the [Kinetic Gain Protocol Suite](https://github.com/mizcausevic-dev?q=spec) and the visualizer auto-detects the spec by inspecting the top-level `*_version` field, then dispatches to the appropriate spec-aware renderer.
+One web app, eleven specs. Paste any document from the [Kinetic Gain Protocol Suite](https://github.com/mizcausevic-dev?q=spec) and the visualizer auto-detects the spec by inspecting the top-level `*_version` field, then dispatches to the appropriate spec-aware renderer.
 
 **Live:** https://mizcausevic-dev.github.io/kinetic-gain-visualizer/
 
@@ -13,13 +13,19 @@ One web app, five specs. Paste any document from the [Kinetic Gain Protocol Suit
 | Agent Cards | `agent_card_version` | [agent-cards-spec](https://github.com/mizcausevic-dev/agent-cards-spec) |
 | AI Evidence Format | `evidence_version` | [ai-evidence-format-spec](https://github.com/mizcausevic-dev/ai-evidence-format-spec) |
 | MCP Tool Cards | `tool_card_version` | [mcp-tool-card-spec](https://github.com/mizcausevic-dev/mcp-tool-card-spec) |
+| AI Tutor Card | `tutor_card_version` | [ai-tutor-card-spec](https://github.com/mizcausevic-dev/ai-tutor-card-spec) |
+| Student AI Disclosure | `disclosure_version` | [student-ai-disclosure-spec](https://github.com/mizcausevic-dev/student-ai-disclosure-spec) |
+| Classroom AI AUP | `aup_version` | [classroom-ai-aup-spec](https://github.com/mizcausevic-dev/classroom-ai-aup-spec) |
+| Clinical AI Disclosure | `clinical_ai_card_version` | [clinical-ai-disclosure-spec](https://github.com/mizcausevic-dev/clinical-ai-disclosure-spec) |
+| AI Incident Card | `incident_card_version` | [ai-incident-card-spec](https://github.com/mizcausevic-dev/ai-incident-card-spec) |
+| AI Procurement Decision Card | `decision_card_version` | [ai-procurement-decision-spec](https://github.com/mizcausevic-dev/ai-procurement-decision-spec) |
 
 Documents without a recognized version field render as raw JSON with a hint about which fields the visualizer looks for.
 
 ## Deep-link URLs
 
 - `?view=visualize` — default view (rendered card layout)
-- `?view=editor` — JSON editor with "Load example" gallery for all 5 specs
+- `?view=editor` — JSON editor with "Load example" gallery for all 11 specs
 - `?view=about` — overview of the Suite + the detection contract
 
 ## Run locally
