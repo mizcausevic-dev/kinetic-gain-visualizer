@@ -58,7 +58,7 @@ export function ArchitectureView() {
           Five core specs cover entity, prompt, agent, evidence, and tool disclosure; an EdTech trio
           (Tutor Cards · Student AI Disclosure · Classroom AI AUP) closes the vendor / district / student
           loop; a HealthTech extension (Clinical AI Disclosure) extends the pattern into regulated clinical
-          contexts; and two cross-cutting specs frame the procurement loop — vendor-side <strong>AI Incident
+          contexts; and two cross-cutting specs frame the procurement loop, vendor-side <strong>AI Incident
           Card</strong> and buyer-side <strong>AI Procurement Decision Card</strong>. Total surface:{' '}
           <strong>{TOTAL_TOOL_COUNT} tools</strong>.
         </p>

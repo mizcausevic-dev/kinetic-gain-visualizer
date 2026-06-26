@@ -202,7 +202,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
           label="Permitted roles"
           value={
             doc.permitted_use.permitted_roles.length === 0 ? (
-              <span className="text-red-300 italic text-sm">none — zero AI use permitted</span>
+              <span className="text-red-300 italic text-sm">none, zero AI use permitted</span>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {doc.permitted_use.permitted_roles.map((r) => (
@@ -378,7 +378,7 @@ export function ClassroomAupRenderer({ doc }: { doc: ClassroomAup }) {
       {doc.vendor_requirements && (
         <Card
           title="Vendor requirements"
-          subtitle="The procurement weapon — joins against vendor Tutor / Agent Cards"
+          subtitle="The procurement weapon, joins against vendor Tutor / Agent Cards"
           tone="authority"
         >
           {doc.vendor_requirements.requires_tutor_card !== undefined && (

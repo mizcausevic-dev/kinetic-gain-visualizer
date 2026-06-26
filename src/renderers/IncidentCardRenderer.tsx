@@ -253,7 +253,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
       <Card title="Harm" subtitle="Impact assessment">
         <Field
           label="Manifested"
-          value={<Pill tone={doc.harm.manifested ? 'red' : 'amber'}>{doc.harm.manifested ? 'yes — harm actually occurred' : 'no — near-miss or theoretical'}</Pill>}
+          value={<Pill tone={doc.harm.manifested ? 'red' : 'amber'}>{doc.harm.manifested ? 'yes, harm actually occurred' : 'no, near-miss or theoretical'}</Pill>}
         />
         <Field
           label="Severity justification"
@@ -266,7 +266,7 @@ export function IncidentCardRenderer({ doc }: { doc: IncidentCard }) {
       <Card title="Mitigation" subtitle="What was done about it">
         <Field
           label="Permanent fix"
-          value={<Pill tone={doc.mitigation.permanent_fix ? 'green' : 'amber'}>{doc.mitigation.permanent_fix ? 'yes' : 'no — temporary mitigation pending full fix'}</Pill>}
+          value={<Pill tone={doc.mitigation.permanent_fix ? 'green' : 'amber'}>{doc.mitigation.permanent_fix ? 'yes' : 'no, temporary mitigation pending full fix'}</Pill>}
         />
         <Field
           label="Rollout status"

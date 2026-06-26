@@ -118,7 +118,7 @@ export default function App() {
                 </span>
               ) : (
                 <span className="px-3 py-1 rounded-full border bg-slate-800 text-slate-400 border-slate-800 text-sm">
-                  unknown — no <code className="code">*_version</code> field detected
+                  unknown, no <code className="code">*_version</code> field detected
                 </span>
               )}
               {info && (
@@ -250,8 +250,8 @@ function AboutView() {
           The Kinetic Gain Protocol Suite is a family of open JSON specifications for the answer-engine era:
           five core specs (AEO entity declaration, Prompt Provenance, Agent Cards, AI Evidence Format, MCP Tool Cards),
           a three-spec EdTech trio (AI Tutor Cards, Student AI Disclosure, Classroom AI AUP), a HealthTech extension
-          (Clinical AI Disclosure), and two cross-cutting specs — the vendor-side <strong>AI Incident Card</strong> and
-          the buyer-side <strong>AI Procurement Decision Card</strong> (v0.2 adds a Skyyflow-shaped{' '}
+          (Clinical AI Disclosure), and two cross-cutting specs, the vendor-side <strong>AI Incident Card</strong> and
+          the buyer-side <strong>AI Procurement Decision Card</strong> (v0.2 adds a Skyflow-shaped{' '}
           <code className="code">data_vault_targets[]</code> field declaring which PII fields may be vaulted and which
           roles may detokenize). This visualizer accepts a document for any of the eleven and dispatches to the right
           renderer based on the top-level <code className="code">*_version</code> field.

@@ -116,7 +116,7 @@ export function AuditStreamView() {
           One hash-chained governance log. Six producers writing to it.
         </h1>
         <p className="text-slate-400 leading-relaxed">
-          Below is a synthetic six-event chain showing a realistic governance arc — buyer drafts a
+          Below is a synthetic six-event chain showing a realistic governance arc, buyer drafts a
           Decision Card, approves it with conditions, the PolicyBundle is minted, an enforcement
           gate denies a request, an attestation fails, and a watch on the vendor's tutor-card
           drifts. Every event carries a canonical-JSON SHA-256 hash linking it to the prior event
@@ -138,7 +138,7 @@ export function AuditStreamView() {
           >
             audit_chain_verify
           </a>{' '}
-          MCP tool. This page recomputes the same hashes in your browser via Web Crypto — no
+          MCP tool. This page recomputes the same hashes in your browser via Web Crypto. No
           network calls.
         </p>
       </header>
@@ -220,7 +220,7 @@ export function AuditStreamView() {
           <li>
             <strong className="text-slate-100">Tamper = visible break.</strong> Click{' '}
             <em>Tamper with event #3</em> to mutate one field of one event. The recomputed hash no
-            longer matches the reported hash, and the chain reports the break at event #3 — the
+            longer matches the reported hash, and the chain reports the break at event #3, the
             same diagnostic <code className="code">audit_chain_verify</code> would emit on a real
             audit-stream-py instance.
           </li>
@@ -252,7 +252,7 @@ function TamperSpotlight({ event, step }: { event: GovernanceEvent; step: ChainS
       <p className="text-sm text-slate-300 leading-relaxed">
         The chain reports a hash for this event. The browser then recomputes the canonical-JSON
         SHA-256 of the event body and compares character-by-character. Divergent bytes are
-        highlighted below — even one flipped nibble in payload bytes propagates to a wholly
+        highlighted below, even one flipped nibble in payload bytes propagates to a wholly
         different hash.
       </p>
       <div className="grid md:grid-cols-2 gap-3">
@@ -272,7 +272,7 @@ function TamperSpotlight({ event, step }: { event: GovernanceEvent; step: ChainS
         />
       </div>
       <div className="text-xs text-slate-400 code">
-        Diverging hex characters: <strong className="text-rose-300">{countDiff(step.reportedHash, step.recomputedHash)}</strong> of {step.reportedHash.length} ({Math.round((countDiff(step.reportedHash, step.recomputedHash) / step.reportedHash.length) * 100)}% — an avalanche, as expected for SHA-256).
+        Diverging hex characters: <strong className="text-rose-300">{countDiff(step.reportedHash, step.recomputedHash)}</strong> of {step.reportedHash.length} ({Math.round((countDiff(step.reportedHash, step.recomputedHash) / step.reportedHash.length) * 100)}%, an avalanche, as expected for SHA-256).
       </div>
     </section>
   );

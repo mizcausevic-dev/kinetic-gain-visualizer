@@ -39,7 +39,7 @@ type Signature = {
   signature_value?: string;
 };
 
-/** v0.2 — Skyyflow-shaped field-level vault contract. */
+/** v0.2 — Skyflow-shaped field-level vault contract. */
 type DataVaultTarget = {
   vendor: 'skyyflow' | 'piiano' | 'nightfall' | 'private-ai' | 'very-good-security' | 'evervault' | 'custom' | 'other';
   vault_id?: string;
@@ -457,7 +457,7 @@ export function DecisionCardRenderer({ doc }: { doc: DecisionCard }) {
         </Card>
       )}
 
-      {/* v0.2: Data vault targets — Skyyflow-shaped field-level vault contract */}
+      {/* v0.2: Data vault targets — Skyflow-shaped field-level vault contract */}
       {doc.data_vault_targets && doc.data_vault_targets.length > 0 && (
         <Card
           title={`Vault contract — data_vault_targets (${doc.data_vault_targets.length})`}
