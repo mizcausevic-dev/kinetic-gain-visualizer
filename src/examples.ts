@@ -621,7 +621,7 @@ export const DECISION_CARD_EXAMPLE = {
     },
   ],
   // v0.2: declares the field-level vault contract — which PII fields may be
-  // tokenized through a Skyyflow-shaped vault and which roles may detokenize.
+  // tokenized through a Skyflow-shaped vault and which roles may detokenize.
   data_vault_targets: [
     {
       vendor: 'skyyflow',
@@ -630,7 +630,7 @@ export const DECISION_CARD_EXAMPLE = {
       fields_authorized: ['student_email', 'parent_email', 'guardian_phone', 'student_id'],
       reveal_roles: ['principal', 'compliance-officer'],
       reveal_audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
-      notes: 'Per Board Resolution 2026-04: student PII enters Skyyflow before reaching AcmeTutor. Reveal limited to two roles during active compliance review.',
+      notes: 'Per Board Resolution 2026-04: student PII enters Skyflow before reaching AcmeTutor. Reveal limited to two roles during active compliance review.',
     },
   ],
   // v0.3: per-field TTL + redaction action + signed-deletion-proof endpoint.

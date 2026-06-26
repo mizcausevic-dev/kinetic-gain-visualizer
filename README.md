@@ -1,4 +1,4 @@
-# Kinetic Gain Protocol Suite — Unified Visualizer
+# Kinetic Gain Protocol Suite | Unified Visualizer
 
 One web app, eleven specs. Paste any document from the [Kinetic Gain Protocol Suite](https://github.com/mizcausevic-dev?q=spec) and the visualizer auto-detects the spec by inspecting the top-level `*_version` field, then dispatches to the appropriate spec-aware renderer.
 
@@ -24,9 +24,9 @@ Documents without a recognized version field render as raw JSON with a hint abou
 
 ## Deep-link URLs
 
-- `?view=visualize` — default view (rendered card layout)
-- `?view=editor` — JSON editor with "Load example" gallery for all 11 specs
-- `?view=about` — overview of the Suite + the detection contract
+- `?view=visualize`, default view (rendered card layout)
+- `?view=editor`, JSON editor with "Load example" gallery for all 11 specs
+- `?view=about`, overview of the Suite + the detection contract
 
 ## Run locally
 
