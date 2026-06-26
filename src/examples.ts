@@ -626,7 +626,7 @@ export const DECISION_CARD_EXAMPLE = {
     {
       vendor: 'skyyflow',
       vault_id: 'springfield-edtech-2026',
-      vault_url: 'https://springfield-edtech.vault.skyyflowapis.example',
+      vault_url: 'https://springfield-edtech.vault.skyflowapis.example',
       fields_authorized: ['student_email', 'parent_email', 'guardian_phone', 'student_id'],
       reveal_roles: ['principal', 'compliance-officer'],
       reveal_audit_uri: 'https://springfield.edu/.well-known/edtech-reveal-audit',
