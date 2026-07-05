@@ -15,6 +15,7 @@ const accentBadge: Record<ProtocolAccent, string> = {
   cyan: 'bg-cyan-50 text-cyan-700 border-cyan-200',
   red: 'bg-red-500/10 text-red-300 border-red-500/30',
   purple: 'bg-purple-50 text-purple-700 border-purple-200',
+  orange: 'bg-orange-500/10 text-orange-300 border-orange-500/30',
 };
 
 const accentBorder: Record<ProtocolAccent, string> = {
@@ -29,6 +30,7 @@ const accentBorder: Record<ProtocolAccent, string> = {
   cyan: 'border-cyan-300',
   red: 'border-red-300',
   purple: 'border-purple-300',
+  orange: 'border-orange-300',
 };
 
 const accentLeft: Record<ProtocolAccent, string> = {
@@ -43,6 +45,7 @@ const accentLeft: Record<ProtocolAccent, string> = {
   cyan: 'border-l-cyan-500',
   red: 'border-l-red-500',
   purple: 'border-l-purple-500',
+  orange: 'border-l-orange-500',
 };
 
 // Cross-cutting tools belong to no single spec — synthetic entry so they show
@@ -309,5 +312,7 @@ function barColor(accent: ProtocolAccent): string {
       return 'bg-red-500/100';
     case 'purple':
       return 'bg-purple-500';
+    case 'orange':
+      return 'bg-orange-500/100';
   }
 }

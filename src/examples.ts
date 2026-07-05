@@ -690,6 +690,69 @@ export const DECISION_CARD_EXAMPLE = {
 
 import type { SpecKey } from './detect';
 
+// AI Claims Decision Card (InsurTech) v0.1 — fully fictional. Insurer-side
+// record that an AI system adjudicated an insurance claim, with a signed,
+// hash-chained evidence bundle.
+export const CLAIMS_CARD_EXAMPLE = {
+  claims_card_version: '0.1',
+  claim: {
+    claim_id: 'c3d4e5f6-a7b8-9012-cdef-123456789012',
+    policy_id: 'POLICY-ACME-INS-2026-0099',
+    claimant_ref: 'CLAIMANT-REF-9a8b7c',
+    claim_type: 'property_damage',
+    filed_at: '2026-06-15T09:00:00Z',
+  },
+  decision: {
+    outcome: 'approve',
+    reasons: [
+      'Damage consistent with covered peril',
+      'Documentation complete and verified',
+      'Coverage limits satisfied',
+    ],
+    rule_refs: ['UW-RULE-PROP-2026-001', 'UW-RULE-DOCS-003'],
+    coverage: { covered: true, amount: 24500.0, currency: 'USD' },
+  },
+  evidence_bundle: {
+    sources: [
+      {
+        source_id: 'EV-ADJUSTER-REPORT-001',
+        source_type: 'document',
+        content_hash: 'a1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00',
+        retrieval_confidence: 0.97,
+        synthesis_role: 'primary',
+      },
+      {
+        source_id: 'EV-DAMAGE-PHOTO-014',
+        source_type: 'image',
+        content_hash: '0f1e2d3c4b5a69788796a5b4c3d2e1f00fedcba9876543210123456789abcdef',
+        retrieval_confidence: 0.88,
+        synthesis_role: 'supporting',
+      },
+    ],
+    model: { model_id: 'claims-evaluator', model_version: '2026.06', provider: 'example-llm-provider' },
+    synthesis_method: 'evidence-weighted-rule-evaluation',
+  },
+  governance: {
+    underwriting_rules_version: 'UW-RULESET-2026-Q2-001',
+    jurisdiction: 'US-CA',
+    regulatory_refs: ['CA-IC-section-790', 'NAIC-unfair-claims-model-act'],
+    human_in_loop: true,
+    reviewer_ref: 'REVIEWER-REF-4d5e6f',
+  },
+  attestation: {
+    card_hash: '3f9c7a1b2d4e6081527384a5b6c7d8e9f0a1b2c3d4e5f60718293a4b5c6d7e8f9',
+    signature:
+      '9a8b7c6d5e4f30211203344556677889aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899a1b2c3d4e5f60718293a4b5c6d7e8f9',
+    algorithm: 'ed25519',
+    signing_key_id: 'kg-signing-key-2026-001',
+    signed_at: '2026-06-29T14:00:00Z',
+    chain_index: 0,
+    prev_card_hash: null,
+  },
+  disclaimer:
+    'This AI Claims Decision Card is a governance artifact generated for audit and traceability purposes. It does not constitute legal advice, regulatory certification, or a determination of coverage under applicable law. All claims decisions are subject to review under the insurer\'s internal adjudication process and applicable state insurance regulations.',
+};
+
 export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
   aeo: AEO_EXAMPLE,
   'prompt-provenance': PROMPT_PROVENANCE_EXAMPLE,
@@ -702,4 +765,5 @@ export const EXAMPLES: Record<Exclude<SpecKey, 'unknown'>, unknown> = {
   'clinical-ai': CLINICAL_AI_EXAMPLE,
   'ai-incident-card': AI_INCIDENT_EXAMPLE,
   'decision-card': DECISION_CARD_EXAMPLE,
+  'claims-card': CLAIMS_CARD_EXAMPLE,
 };
