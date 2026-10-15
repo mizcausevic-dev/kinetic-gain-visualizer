@@ -36,7 +36,7 @@ export interface ProtocolSummary {
   accent: ProtocolAccent;
 }
 
-export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia' | 'cyan' | 'red' | 'purple';
+export type ProtocolAccent = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose' | 'teal' | 'indigo' | 'fuchsia' | 'cyan' | 'red' | 'purple' | 'orange';
 
 export const PROTOCOLS: ProtocolSummary[] = [
   {
@@ -170,6 +170,18 @@ export const PROTOCOLS: ProtocolSummary[] = [
     toolCount: 7,
     specRepo: 'https://github.com/mizcausevic-dev/ai-procurement-decision-spec',
     accent: 'purple',
+  },
+  {
+    key: 'claims-card',
+    displayName: 'AI Claims Decision Card',
+    fullName: 'AI Claims Decision Card v0.1 (InsurTech · insurer-side)',
+    shortBlurb:
+      'The insurer/adjudicator-side artifact. Records that an AI system decided an insurance claim: outcome (approve/deny/pend/refer), coverage, underwriting rules applied, a content-hashed evidence bundle, jurisdiction + regulatory refs, and whether a human adjuster reviewed. ed25519-signed and hash-chained, same attestation model as the audit-stream. Detection key claims_card_version.',
+    versionField: 'claims_card_version',
+    wellKnownPath: null,
+    toolCount: 4,
+    specRepo: 'https://github.com/mizcausevic-dev/ai-claims-decision-card-spec',
+    accent: 'orange',
   },
 ];
 
@@ -787,7 +799,7 @@ export const TOOLS: ToolSpec[] = [
     name: 'suite_doc_detect_spec',
     protocol: 'cross-cutting',
     description:
-      "Detect which Kinetic Gain Suite spec a JSON document is by sniffing its top-level *_version field. Returns { spec, version_field, version }. Recognises all 11 specs; returns spec='unknown' for anything else.",
+      "Detect which Kinetic Gain Suite spec a JSON document is by sniffing its top-level *_version field. Returns { spec, version_field, version }. Recognises all 12 specs; returns spec='unknown' for anything else.",
     inputs: [
       { name: 'body', type: 'object', required: true, description: 'JSON document to classify.' },
     ],
@@ -800,6 +812,44 @@ export const TOOLS: ToolSpec[] = [
     inputs: [
       { name: 'before', type: 'object', required: true, description: 'Earlier snapshot of the document.' },
       { name: 'after', type: 'object', required: true, description: 'Later snapshot of the same document.' },
+    ],
+  },
+  {
+    name: 'claims_card_validate',
+    protocol: 'claims-card',
+    description:
+      'Validate an AI Claims Decision Card (InsurTech) against the v0.1 spec: claims_card_version detection key, required top-level keys, decision.outcome enum, a non-empty evidence_bundle.sources, and the disclaimer. Returns { valid, claims_card_id, version } or { valid: false, reason }.',
+    inputs: [
+      { name: 'document', type: 'object', required: true, description: 'The Claims Decision Card JSON.' },
+    ],
+  },
+  {
+    name: 'claims_card_inspect',
+    protocol: 'claims-card',
+    description:
+      'Structured summary of an AI Claims Decision Card: claim type, outcome, coverage, evidence count, model, jurisdiction, human-in-loop, chain position, and attestation status.',
+    inputs: [
+      { name: 'document', type: 'object', required: true, description: 'The Claims Decision Card JSON.' },
+    ],
+  },
+  {
+    name: 'claims_card_sign',
+    protocol: 'claims-card',
+    description:
+      'Compute the canonical SHA-256 (attestation-excluded) of an AI Claims Decision Card for offline ed25519 signing. Returns the 64-char lowercase hex card_hash.',
+    inputs: [
+      { name: 'document', type: 'object', required: true, description: 'The Claims Decision Card; attestation.card_hash + signature are stripped before hashing.' },
+    ],
+  },
+  {
+    name: 'claims_card_chain',
+    protocol: 'claims-card',
+    description:
+      'Link a new AI Claims Decision Card to its predecessor: sets attestation.chain_index (prev + 1) and prev_card_hash. Call claims_card_sign next.',
+    inputs: [
+      { name: 'card', type: 'object', required: true, description: 'The new Claims Decision Card (attestation may be partial).' },
+      { name: 'prev_card_hash', type: 'string', required: true, description: '64-char lowercase hex SHA-256 of the previous card.' },
+      { name: 'prev_chain_index', type: 'integer', required: true, description: 'chain_index of the previous card.' },
     ],
   },
 ];
